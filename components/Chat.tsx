@@ -1,6 +1,6 @@
-import {Message} from '@/lib/messages'
 import {LoaderIcon} from 'lucide-react'
 import {useEffect, useState} from 'react'
+import {Message} from "@/types/message";
 
 export function Chat({
                          messages,

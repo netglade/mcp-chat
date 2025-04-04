@@ -1,25 +1,4 @@
-import {ToolCall} from "@/lib/toolCall";
-
-export type MessageText = {
-    type: 'text'
-    text: string
-}
-
-export type MessageCode = {
-    type: 'code'
-    text: string
-}
-
-export type MessageImage = {
-    type: 'image'
-    image: string
-}
-
-export type Message = {
-    role: 'assistant' | 'user'
-    content: Array<MessageText | MessageCode | MessageImage>
-    toolCalls?: ToolCall[]
-}
+import {Message} from "@/types/message";
 
 export function toAISDKMessages(messages: Message[]) {
     return messages.map((message) => ({

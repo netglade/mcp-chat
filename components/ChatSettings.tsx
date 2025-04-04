@@ -1,4 +1,4 @@
-import {Mcps, McpServer} from '@/lib/mcpServer'
+import {Mcps, McpServer} from '@/types/mcpServer'
 import {Button} from './ui/Button'
 import {
     Dialog,

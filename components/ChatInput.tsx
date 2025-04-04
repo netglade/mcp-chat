@@ -1,11 +1,11 @@
 "use client"
 
 import {Button} from '@/components/ui/Button'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from '@/components/ui/Tooltip'
-import {isFileInArray} from '@/lib/utils'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/Tooltip'
 import {ArrowUp, Square} from 'lucide-react'
 import {SetStateAction, useEffect, useState} from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
+import {isFileInArray} from "@/lib/isFileInArray";
 
 export function ChatInput({
                               retry,

@@ -6,9 +6,10 @@ import {ChatInput} from '@/components/ChatInput'
 import {ChatSettings} from '@/components/ChatSettings'
 import {NavBar} from '@/components/NavBar'
 import {SetStateAction, useState} from 'react'
-import {Message, toAISDKMessages, toMessageImage} from "@/lib/messages";
+import {toAISDKMessages, toMessageImage} from "@/lib/messages";
+import type {Message} from "@/types/message";
 import {useLocalStorage} from 'usehooks-ts'
-import {LLMModelConfig} from '@/lib/models'
+import type {LLMModelConfig} from '@/types/llmModel'
 // import { AuthViewType, useAuth } from '@/lib/auth'
 // import { Message, toAISDKMessages, toMessageImage } from '@/lib/messages'
 // import { LLMModelConfig } from '@/lib/models'

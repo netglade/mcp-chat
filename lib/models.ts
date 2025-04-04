@@ -4,25 +4,7 @@ import {createVertex} from '@ai-sdk/google-vertex'
 import {createMistral} from '@ai-sdk/mistral'
 import {createOpenAI} from '@ai-sdk/openai'
 import {createOllama} from 'ollama-ai-provider'
-
-export type LLMModel = {
-    id: string
-    name: string
-    provider: string
-    providerId: string
-}
-
-export type LLMModelConfig = {
-    model?: string
-    apiKey?: string
-    baseURL?: string
-    temperature?: number
-    topP?: number
-    topK?: number
-    frequencyPenalty?: number
-    presencePenalty?: number
-    maxTokens?: number
-}
+import {LLMModel, LLMModelConfig} from "@/types/llmModel";
 
 export function getModelClient(model: LLMModel, config: LLMModelConfig) {
     const { id: modelNameString, providerId } = model

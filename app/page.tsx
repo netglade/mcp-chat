@@ -1,104 +1,300 @@
-import Image from "next/image";
-import nextConfig from "@/next.config";
+'use client'
+
+// import { addMcp, getMcps } from './actions/publish'
+import {Chat} from '@/components/chat'
+import {ChatInput} from '@/components/chat-input'
+import {ChatSettings} from '@/components/chat-settings'
+import {NavBar} from '@/components/navbar'
+import {SetStateAction, useState} from 'react'
+import {Message, toAISDKMessages, toMessageImage} from "@/lib/messages";
+import {useLocalStorage} from 'usehooks-ts'
+import {LLMModelConfig} from '@/lib/models'
+// import { AuthViewType, useAuth } from '@/lib/auth'
+// import { Message, toAISDKMessages, toMessageImage } from '@/lib/messages'
+// import { LLMModelConfig } from '@/lib/models'
+import modelsList from '@/lib/models.json'
+// import { FragmentSchema } from '@/lib/schema'
+// import templates, { TemplateId } from '@/lib/templates'
+// import { ExecutionResult } from '@/lib/types'
+// import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+// import { DeepPartial } from 'ai'
+// import { usePostHog } from 'posthog-js/react'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src={`${nextConfig.basePath}/next.svg`}
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // const [queryClient] = useState(
+  //     () =>
+  //         new QueryClient({
+  //           defaultOptions: {
+  //             queries: {
+  //               staleTime: 60 * 1000, // 1 minute
+  //               // You can customize default options here
+  //             },
+  //           },
+  //         }),
+  // )
+  //
+  // useEffect(() => {
+  //   addMcp({
+  //     name: 'postgres',
+  //     command:
+  //         'npx @modelcontextprotocol/server-postgres postgresql://postgres.awlyjmwlluxpdrnpqnpi:utensils.buddha.EXPELLED@aws-0-eu-central-1.pooler.supabase.com:5432/postgres',
+  //     envs: {},
+  //   })
+  // }, [])
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src={`${nextConfig.basePath}/vercel.svg`}
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src={`${nextConfig.basePath}/file.svg`}
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src={`${nextConfig.basePath}/window.svg`}
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src={`${nextConfig.basePath}/globe.svg`}
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+  const [chatInput, setChatInput] = useLocalStorage('chat', '')
+  const [files, setFiles] = useState<File[]>([])
+  // const [selectedTemplate, setSelectedTemplate] = useState<'auto' | TemplateId>(
+  //     'auto',
+  // )
+  const [languageModel, setLanguageModel] = useLocalStorage<LLMModelConfig>(
+      'languageModel',
+      {
+        model: 'claude-3-5-sonnet-latest',
+      },
+  )
+
+  // // const posthog = usePostHog()
+
+  const [messages, setMessages] = useState<Message[]>([])
+  // const [isAuthDialogOpen, setAuthDialog] = useState(false)
+  // const [authView, setAuthView] = useState<AuthViewType>('sign_in')
+  // const [isRateLimited, setIsRateLimited] = useState(false)
+  // const { session, apiKey } = useAuth(setAuthDialog, setAuthView)
+
+  const filteredModels = modelsList.models.filter((model) => {
+    if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
+      return model.providerId !== 'ollama'
+    }
+    return true
+  })
+
+  const currentModel = filteredModels.find(
+      (model) => model.id === languageModel.model,
+  )
+  // const currentTemplate =
+  //     selectedTemplate === 'auto'
+  //         ? templates
+  //         : { [selectedTemplate]: templates[selectedTemplate] }
+  // const lastMessage = messages[messages.length - 1]
+  //
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(undefined)
+  const [abortController, setAbortController] = useState(
+      null as AbortController | null,
+  )
+
+  const submit = async ({ messages }: { messages: Message[] }) => {
+    console.log(messages)
+    setIsLoading(true)
+    setError(undefined)
+
+    const controller = new AbortController()
+    setAbortController(controller)
+
+    try {
+      // console.log(await getMcps())
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        body: JSON.stringify({ messages }),
+        signal: controller.signal,
+      })
+
+      const data = await response.json()
+
+      if (response.status !== 200) {
+        addMessage({
+          role: 'assistant',
+          content: [{ type: 'text', text: "Ups, something went wrong..." }],
+        })
+      } else {
+        addMessage({
+          role: 'assistant',
+          toolCalls: data.toolCalls,
+          content: [{ type: 'text', text: data.text }],
+        })
+      }
+      // setCurrentTab('fragment')
+      // setIsPreviewLoading(false)
+    } catch (err: any) {
+      if (err.name === 'AbortError') {
+        console.log('Fetch operation was aborted')
+      } else {
+        console.error('Error submitting form:', err)
+        setError(err.message || 'An error occurred while submitting the form')
+      }
+    } finally {
+      setAbortController(null)
+      setIsLoading(false)
+    }
+  }
+
+  const stop = () => {
+    if (abortController) {
+      // Abort the ongoing fetch
+      abortController.abort()
+
+      // You might want to reset states here as well
+      setIsLoading(false)
+
+      // Optional: provide user feedback
+      console.log('Request cancelled by user')
+    }
+  }
+
+  // useEffect(() => {
+  //   if (object) {
+  //     setFragment(object)
+  //     const content: Message['content'] = [
+  //       { type: 'text', text: object.commentary || '' },
+  //       { type: 'code', text: object.code || '' },
+  //     ]
+
+  //     if (!lastMessage || lastMessage.role !== 'assistant') {
+  //       addMessage({
+  //         role: 'assistant',
+  //         content,
+  //         object,
+  //       })
+  //     }
+
+  //     if (lastMessage && lastMessage.role === 'assistant') {
+  //       setMessage({
+  //         content,
+  //         object,
+  //       })
+  //     }
+  //   }
+  // }, [object])
+
+  // function setMessage(message: Partial<Message>, index?: number) {
+  //   setMessages((previousMessages) => {
+  //     const updatedMessages = [...previousMessages]
+  //     updatedMessages[index ?? previousMessages.length - 1] = {
+  //       ...previousMessages[index ?? previousMessages.length - 1],
+  //       ...message,
+  //     }
+  //
+  //     return updatedMessages
+  //   })
+  // }
+
+  async function handleSubmitAuth(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    // if (isLoading) {
+    //   stop()
+    // }
+
+    const content: Message['content'] = [{ type: 'text', text: chatInput }]
+    const images = await toMessageImage(files)
+
+    if (images.length > 0) {
+      images.forEach((image) => {
+        content.push({ type: 'image', image })
+      })
+    }
+
+    const updatedMessages = addMessage({
+      role: 'user',
+      content,
+    })
+
+    submit({
+      messages: toAISDKMessages(updatedMessages),
+    })
+
+    setChatInput('')
+    setFiles([])
+
+    // posthog.capture('chat_submit', {
+    //   template: selectedTemplate,
+    //   model: languageModel.model,
+    // })
+  }
+
+  function retry() {
+    submit({
+      messages: toAISDKMessages(messages),
+    })
+  }
+
+  function addMessage(message: Message) {
+    setMessages((previousMessages) => [...previousMessages, message])
+    return [...messages, message]
+  }
+
+  function handleSaveInputChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setChatInput(e.target.value)
+  }
+
+  function handleFileChange(change: SetStateAction<File[]>) {
+    setFiles(change)
+  }
+
+  function handleLanguageModelChange(e: LLMModelConfig) {
+    setLanguageModel({ ...languageModel, ...e })
+  }
+
+  // function handleSocialClick(target: 'github' | 'x' | 'discord') {
+  //   if (target === 'github') {
+  //     window.open('https://github.com/e2b-dev/fragments', '_blank')
+  //   } else if (target === 'x') {
+  //     window.open('https://x.com/e2b_dev', '_blank')
+  //   } else if (target === 'discord') {
+  //     window.open('https://discord.gg/U7KEcGErtQ', '_blank')
+  //   }
+  //
+  //   posthog.capture(`${target}_click`)
+  // }
+
+  function handleClearChat() {
+    // stop()
+    // setChatInput('')
+    // setFiles([])
+    // setMessages([])
+    // setIsPreviewLoading(false)
+  }
+
+  // function handleUndo() {
+  //   setMessages((previousMessages) => [...previousMessages.slice(0, -2)])
+  //   setCurrentPreview({ fragment: undefined, result: undefined })
+  // }
+
+  return (
+      // <QueryClientProvider client={queryClient}>
+        <main className="flex min-h-screen max-h-screen">
+          <div className="grid w-full md:grid-cols-2">
+            <div
+                className={`flex flex-col w-full max-h-full max-w-[800px] mx-auto px-4 overflow-auto col-span-2`}
+            >
+              <NavBar
+                  onClear={handleClearChat}
+                  canClear={messages.length > 0}
+              />
+              <Chat
+                  messages={messages}
+                  isLoading={isLoading}
+              />
+              <ChatInput
+                  retry={retry}
+                  isErrored={error !== undefined}
+                  isLoading={isLoading}
+                  isRateLimited={false}
+                  stop={stop}
+                  input={chatInput}
+                  handleInputChange={handleSaveInputChange}
+                  handleSubmit={handleSubmitAuth}
+                  isMultiModal={currentModel?.multiModal || false}
+                  handleFileChange={handleFileChange}
+              >
+                <ChatSettings />
+              {/*  TODO - read api key from localstorage  */}
+              </ChatInput>
+            </div>
+          </div>
+        </main>
+      // </QueryClientProvider>
+  )
 }

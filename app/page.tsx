@@ -1,10 +1,10 @@
 'use client'
 
 // import { addMcp, getMcps } from './actions/publish'
-import {Chat} from '@/components/chat'
-import {ChatInput} from '@/components/chat-input'
-import {ChatSettings} from '@/components/chat-settings'
-import {NavBar} from '@/components/navbar'
+import {Chat} from '@/components/Chat'
+import {ChatInput} from '@/components/ChatInput'
+import {ChatSettings} from '@/components/ChatSettings'
+import {NavBar} from '@/components/NavBar'
 import {SetStateAction, useState} from 'react'
 import {Message, toAISDKMessages, toMessageImage} from "@/lib/messages";
 import {useLocalStorage} from 'usehooks-ts'

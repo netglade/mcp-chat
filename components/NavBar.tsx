@@ -1,5 +1,5 @@
-import {Button} from '@/components/ui/button'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from '@/components/ui/tooltip'
+import {Button} from '@/components/ui/Button'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from '@/components/ui/Tooltip'
 import {Trash} from 'lucide-react'
 
 export function NavBar({

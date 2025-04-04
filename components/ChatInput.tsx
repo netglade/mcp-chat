@@ -1,7 +1,7 @@
 "use client"
 
-import {Button} from '@/components/ui/button'
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from '@/components/ui/tooltip'
+import {Button} from '@/components/ui/Button'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from '@/components/ui/Tooltip'
 import {isFileInArray} from '@/lib/utils'
 import {ArrowUp, Square} from 'lucide-react'
 import {SetStateAction, useEffect, useState} from 'react'

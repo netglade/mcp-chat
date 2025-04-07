@@ -42,13 +42,13 @@ export function ModelPicker({
                                 {models?.map((model) => (
                                     <SelectItem key={model.id} value={model.id}>
                                         <div className="flex items-center space-x-2">
-                                            {/*<Image*/}
-                                            {/*    className="flex"*/}
-                                            {/*    src={`${nextConfig.basePath}/thirdparty/logos/${model.providerId}.svg`}*/}
-                                            {/*    alt={model.provider}*/}
-                                            {/*    width={14}*/}
-                                            {/*    height={14}*/}
-                                            {/*/>*/}
+                                            <img
+                                                className="flex"
+                                                src={new URL(`../assets/thirdparty/logos/${model.providerId}.svg`, import.meta.url).href}
+                                                alt={model.provider}
+                                                width={14}
+                                                height={14}
+                                            />
                                             <span>{model.name}</span>
                                         </div>
                                     </SelectItem>

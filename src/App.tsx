@@ -66,7 +66,8 @@ export default function App() {
     const [e2bApiKey, setE2bApiKey] = useLocalStorage<string>('e2bApiKey', '')
 
     const filteredModels = modelsList.models.filter((model) => {
-        if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
+        // if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
+        if (true) {
             return model.providerId !== 'ollama'
         }
         return true

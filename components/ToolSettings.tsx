@@ -18,7 +18,7 @@ import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from './ui/To
 import {HammerIcon, LoaderCircle, PlusIcon, TrashIcon} from 'lucide-react'
 import {useState} from 'react'
 
-export function ChatSettings() {
+export function ToolSettings() {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedTool, setSelectedTool] = useState<McpServer | null>(null)
     const [newToolName, setNewToolName] = useState('')

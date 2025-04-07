@@ -65,6 +65,8 @@ export default function Home() {
   // const [isRateLimited, setIsRateLimited] = useState(false)
   // const { session, apiKey } = useAuth(setAuthDialog, setAuthView)
 
+  const [e2bApiKey, setE2bApiKey] = useState<string>('')
+
   const filteredModels = modelsList.models.filter((model) => {
     if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
       return model.providerId !== 'ollama'
@@ -299,10 +301,10 @@ export default function Home() {
                     onLanguageModelChange={handleLanguageModelChange}
                 />
                 <Settings
+                    e2bApiKey={e2bApiKey}
+                    onE2bApiKeyChange={setE2bApiKey}
                     languageModel={languageModel}
                     onLanguageModelChange={handleLanguageModelChange}
-                    apiKeyConfigurable={!process.env.NEXT_PUBLIC_NO_API_KEY_INPUT}
-                    baseURLConfigurable={!process.env.NEXT_PUBLIC_NO_BASE_URL_INPUT}
                 />
               </ChatInput>
             </div>

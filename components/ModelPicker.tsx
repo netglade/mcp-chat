@@ -12,7 +12,7 @@ import 'core-js/features/object/group-by.js'
 import Image from 'next/image'
 import nextConfig from "@/next.config";
 
-export function ChatPicker({
+export function ModelPicker({
                                models,
                                languageModel,
                                onLanguageModelChange,

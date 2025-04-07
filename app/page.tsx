@@ -3,7 +3,7 @@
 // import { addMcp, getMcps } from './actions/publish'
 import {Chat} from '@/components/Chat'
 import {ChatInput} from '@/components/ChatInput'
-import {ChatSettings} from '@/components/ChatSettings'
+import {ToolSettings} from '@/components/ToolSettings'
 import {NavBar} from '@/components/NavBar'
 import {SetStateAction, useState} from 'react'
 import {toAISDKMessages, toMessageImage} from "@/lib/messages";
@@ -14,7 +14,8 @@ import type {LLMModelConfig} from '@/types/llmModel'
 // import { Message, toAISDKMessages, toMessageImage } from '@/lib/messages'
 // import { LLMModelConfig } from '@/lib/models'
 import modelsList from '@/lib/models.json'
-import {ChatPicker} from "@/components/ChatPicker";
+import {ModelPicker} from "@/components/ModelPicker";
+import {Settings} from "@/components/Settings";
 // import { FragmentSchema } from '@/lib/schema'
 // import templates, { TemplateId } from '@/lib/templates'
 // import { ExecutionResult } from '@/lib/types'
@@ -291,13 +292,18 @@ export default function Home() {
                   isMultiModal={currentModel?.multiModal || false}
                   handleFileChange={handleFileChange}
               >
-                <ChatSettings />
-                <ChatPicker
+                <ToolSettings />
+                <ModelPicker
                     models={filteredModels}
                     languageModel={languageModel}
                     onLanguageModelChange={handleLanguageModelChange}
                 />
-                {/*  TODO - read api key from localstorage  */}
+                <Settings
+                    languageModel={languageModel}
+                    onLanguageModelChange={handleLanguageModelChange}
+                    apiKeyConfigurable={!process.env.NEXT_PUBLIC_NO_API_KEY_INPUT}
+                    baseURLConfigurable={!process.env.NEXT_PUBLIC_NO_BASE_URL_INPUT}
+                />
               </ChatInput>
             </div>
           </div>

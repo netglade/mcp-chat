@@ -14,6 +14,7 @@ import type {LLMModelConfig} from '@/types/llmModel'
 // import { Message, toAISDKMessages, toMessageImage } from '@/lib/messages'
 // import { LLMModelConfig } from '@/lib/models'
 import modelsList from '@/lib/models.json'
+import {ChatPicker} from "@/components/ChatPicker";
 // import { FragmentSchema } from '@/lib/schema'
 // import templates, { TemplateId } from '@/lib/templates'
 // import { ExecutionResult } from '@/lib/types'
@@ -291,7 +292,12 @@ export default function Home() {
                   handleFileChange={handleFileChange}
               >
                 <ChatSettings />
-              {/*  TODO - read api key from localstorage  */}
+                <ChatPicker
+                    models={filteredModels}
+                    languageModel={languageModel}
+                    onLanguageModelChange={handleLanguageModelChange}
+                />
+                {/*  TODO - read api key from localstorage  */}
               </ChatInput>
             </div>
           </div>

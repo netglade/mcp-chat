@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import { Message } from '@/types/message'
 
 export function Chat({
-                         messages,
-                         isLoading,
-                     }: {
+    messages,
+    isLoading,
+}: {
     messages: Message[]
     isLoading: boolean
 }) {
@@ -50,30 +50,33 @@ export function Chat({
                                         >
                                             <span className="text-white mr-1">{toolCall.name}</span>
                                             <span className="text-gray-400">
-                        {expandedCalls[toolCall.id] ? '▲' : '▼'}
-                      </span>
+                                                {expandedCalls[toolCall.id] ? '▲' : '▼'}
+                                            </span>
                                         </div>
+
 
                                         {expandedCalls[toolCall.id] && (
                                             <div className="mt-1">
                                                 {toolCall.arguments.map((argument) => (
                                                     <div key={argument.name} className="flex">
-                            <span className="text-gray-400 mr-1">
-                              {argument.name}:
-                            </span>
+                                                        <span className="text-gray-400 mr-1">
+                                                            {argument.name}:
+                                                        </span>
+
+
                                                         <span className="text-gray-200">
-                              {argument.value}
-                            </span>
+                                                            {argument.value}
+                                                        </span>
                                                     </div>
                                                 ))}
 
                                                 {toolCall.result && (
                                                     <div className="mt-1 border-t border-gray-400">
-                            <span className="text-gray-200 ml-1">
-                              {typeof toolCall.result === 'object'
-                                  ? JSON.stringify(toolCall.result)
-                                  : toolCall.result}
-                            </span>
+                                                        <span className="text-gray-200 ml-1">
+                                                            {typeof toolCall.result === 'object'
+                                                                ? JSON.stringify(toolCall.result)
+                                                                : toolCall.result}
+                                                        </span>
                                                     </div>
                                                 )}
                                             </div>

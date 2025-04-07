@@ -18,7 +18,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/T
 import { HammerIcon, LoaderCircle, PlusIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 
-
 export function ToolSettings() {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedTool, setSelectedTool] = useState<McpServer | null>(null)
@@ -226,8 +225,8 @@ export function ToolSettings() {
                                                 >
                                                     <span className="font-mono text-xs">{key}</span>
                                                     <span className="font-mono text-xs bg-muted px-2 py-1 rounded">
-                            ••••••
-                          </span>
+                                                        ••••••
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
@@ -304,9 +303,9 @@ export function ToolSettings() {
                                                     >
                                                         <span className="font-mono text-xs">{key}</span>
                                                         <div className="flex items-center">
-                              <span className="font-mono text-xs mr-2">
-                                ••••••
-                              </span>
+                                                            <span className="font-mono text-xs mr-2">
+                                                                ••••••
+                                                            </span>
                                                             <Button
                                                                 type="button"
                                                                 variant="ghost"

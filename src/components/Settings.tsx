@@ -7,11 +7,11 @@ import { LLMModelConfig } from '@/types/llmModel'
 import { Settings2 } from 'lucide-react'
 
 export function Settings({
-                             languageModel,
-                             onLanguageModelChange,
-                             e2bApiKey,
-                             onE2bApiKeyChange,
-                         }: {
+    languageModel,
+    onLanguageModelChange,
+    e2bApiKey,
+    onE2bApiKeyChange,
+}: {
     languageModel: LLMModelConfig
     onLanguageModelChange: (model: LLMModelConfig) => void
     e2bApiKey: string

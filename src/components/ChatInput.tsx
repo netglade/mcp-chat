@@ -6,18 +6,18 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { isFileInArray } from '@/lib/isFileInArray'
 
 export function ChatInput({
-                              retry,
-                              isErrored,
-                              isLoading,
-                              isRateLimited,
-                              stop,
-                              input,
-                              handleInputChange,
-                              handleSubmit,
-                              isMultiModal,
-                              handleFileChange,
-                              children,
-                          }: {
+    retry,
+    isErrored,
+    isLoading,
+    isRateLimited,
+    stop,
+    input,
+    handleInputChange,
+    handleSubmit,
+    isMultiModal,
+    handleFileChange,
+    children,
+}: {
     retry: () => void
     isErrored: boolean
     isLoading: boolean
@@ -124,11 +124,11 @@ export function ChatInput({
                             : 'bg-red-400/10 text-red-400'
                     }`}
                 >
-          <span className="flex-1 px-1.5">
-            {isRateLimited
-                ? 'You have reached your request limit for the day.'
-                : 'An unexpected error has occurred.'}
-          </span>
+                    <span className="flex-1 px-1.5">
+                        {isRateLimited
+                            ? 'You have reached your request limit for the day.'
+                            : 'An unexpected error has occurred.'}
+                    </span>
                     <button
                         className={`px-2 py-1 rounded-sm ${
                             isRateLimited ? 'bg-orange-400/20' : 'bg-red-400/20'

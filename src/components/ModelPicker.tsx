@@ -13,10 +13,10 @@ import { LLMModel, LLMModelConfig } from '@/types/llmModel'
 // import nextConfig from '@/next.config'
 
 export function ModelPicker({
-                                models,
-                                languageModel,
-                                onLanguageModelChange,
-                            }: {
+    models,
+    languageModel,
+    onLanguageModelChange,
+}: {
     models: LLMModel[]
     languageModel: LLMModelConfig
     onLanguageModelChange: (config: LLMModelConfig) => void

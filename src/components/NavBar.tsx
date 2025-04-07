@@ -3,9 +3,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Trash } from 'lucide-react'
 
 export function NavBar({
-                           onClear,
-                           canClear,
-                       }: {
+    onClear,
+    canClear,
+}: {
     onClear: () => void
     canClear: boolean
 }) {

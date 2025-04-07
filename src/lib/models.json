@@ -1,0 +1,241 @@
+{
+  "models": [
+    {
+      "id": "o1",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "o1",
+      "multiModal": true
+    },
+    {
+      "id": "o1-mini",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "o1 mini",
+      "multiModal": false
+    },
+    {
+      "id": "o3-mini",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "o3 mini",
+      "multiModal": false
+    },
+    {
+      "id": "gpt-4.5-preview",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4.5",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4o",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4o",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4o-mini",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4o Mini",
+      "multiModal": true
+    },
+    {
+      "id": "gpt-4-turbo",
+      "provider": "OpenAI",
+      "providerId": "openai",
+      "name": "GPT-4 Turbo",
+      "multiModal": true
+    },
+    {
+      "id": "claude-3-7-sonnet-latest",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 3.7 Sonnet",
+      "multiModal": true
+    },
+    {
+      "id": "claude-3-5-sonnet-latest",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 3.5 Sonnet",
+      "multiModal": true
+    },
+    {
+      "id": "claude-3-5-haiku-latest",
+      "provider": "Anthropic",
+      "providerId": "anthropic",
+      "name": "Claude 3.5 Haiku",
+      "multiModal": true
+    },
+    {
+      "id": "gemini-1.5-pro-002",
+      "provider": "Google Vertex AI",
+      "providerId": "vertex",
+      "name": "Gemini 1.5 Pro",
+      "multiModal": true
+    },
+    {
+      "id": "gemini-2.0-flash-exp",
+      "provider": "Google Vertex AI",
+      "providerId": "vertex",
+      "name": "Gemini 2.0 Flash",
+      "multiModal": true
+    },
+    {
+      "id": "gemini-1.5-flash-002",
+      "provider": "Google Vertex AI",
+      "providerId": "vertex",
+      "name": "Gemini 1.5 Flash",
+      "multiModal": true
+    },
+    {
+      "id": "models/gemini-1.5-pro-002",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini 1.5 Pro",
+      "multiModal": true
+    },
+    {
+      "id": "models/gemini-2.0-flash-exp",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini 2.0 Flash",
+      "multiModal": true
+    },
+    {
+      "id": "models/gemini-1.5-flash-002",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini 1.5 Flash",
+      "multiModal": true
+    },
+    {
+      "id": "gemini-exp-1121",
+      "provider": "Google Generative AI",
+      "providerId": "google",
+      "name": "Gemini Experimental 1121",
+      "multiModal": true
+    },
+    {
+      "id": "codestral-2501",
+      "provider": "Mistral",
+      "providerId": "mistral",
+      "name": "Codestral 25.01",
+      "multiModal": false
+    },
+    {
+      "id": "mistral-large-latest",
+      "provider": "Mistral",
+      "providerId": "mistral",
+      "name": "Mistral Large",
+      "multiModal": false
+    },
+    {
+      "id": "pixtral-large-latest",
+      "provider": "Mistral",
+      "providerId": "mistral",
+      "name": "Pixtral Large",
+      "multiModal": true
+    },
+    {
+      "id": "mistral-small-latest",
+      "provider": "Mistral",
+      "providerId": "mistral",
+      "name": "Mistral Small",
+      "multiModal": false
+    },
+    {
+      "id": "open-mistral-nemo",
+      "provider": "Mistral",
+      "providerId": "mistral",
+      "name": "Mistral Nemo",
+      "multiModal": false
+    },
+    {
+      "id": "llama-3.3-70b-versatile",
+      "provider": "Groq",
+      "providerId": "groq",
+      "name": "Llama 3.3 70B (Preview)",
+      "multiModal": false
+    },
+    {
+      "id": "accounts/fireworks/models/llama-v3p1-405b-instruct",
+      "provider": "Fireworks",
+      "providerId": "fireworks",
+      "name": "Llama 3.1 405B",
+      "multiModal": false
+    },
+    {
+      "id": "accounts/fireworks/models/llama-v3p1-70b-instruct",
+      "provider": "Fireworks",
+      "providerId": "fireworks",
+      "name": "Llama 3.1 70B",
+      "multiModal": false
+    },
+    {
+      "id": "accounts/fireworks/models/qwen2p5-coder-32b-instruct",
+      "provider": "Fireworks",
+      "providerId": "fireworks",
+      "name": "Qwen2.5-Coder-32B-Instruct",
+      "multiModal": false
+    },
+    {
+      "id": "accounts/fireworks/models/qwen-qwq-32b-preview",
+      "provider": "Fireworks",
+      "providerId": "fireworks",
+      "name": "Qwen-QWQ-32B-Preview",
+      "multiModal": false
+    },
+    {
+      "id": "accounts/fireworks/models/deepseek-r1",
+      "provider": "Fireworks",
+      "providerId": "fireworks",
+      "name": "DeepSeek R1"
+    },
+    {
+      "id": "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+      "provider": "Together AI",
+      "providerId": "togetherai",
+      "name": "Llama 3.1 70B",
+      "multiModal": false
+    },
+    {
+      "id": "grok-beta",
+      "provider": "xAI",
+      "providerId": "xai",
+      "name": "Grok (Beta)",
+      "multiModal": false
+    },
+    {
+      "id": "deepseek-chat",
+      "provider": "DeepSeek",
+      "providerId": "deepseek",
+      "name": "DeepSeek V3",
+      "multiModal": false
+    },
+    {
+      "id": "llama3.1",
+      "provider": "Ollama",
+      "providerId": "ollama",
+      "name": "Llama 3.1",
+      "multiModal": false
+    },
+    {
+      "id": "mistral-nemo",
+      "provider": "Ollama",
+      "providerId": "ollama",
+      "name": "Mistral Nemo",
+      "multiModal": false
+    },
+    {
+      "id": "mistral-large",
+      "provider": "Ollama",
+      "providerId": "ollama",
+      "name": "Mistral Large",
+      "multiModal": false
+    }
+  ]
+}

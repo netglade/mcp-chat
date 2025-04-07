@@ -65,7 +65,7 @@ export default function Home() {
   // const [isRateLimited, setIsRateLimited] = useState(false)
   // const { session, apiKey } = useAuth(setAuthDialog, setAuthView)
 
-  const [e2bApiKey, setE2bApiKey] = useState<string>('')
+  const [e2bApiKey, setE2bApiKey] = useLocalStorage<string>('e2bApiKey', '')
 
   const filteredModels = modelsList.models.filter((model) => {
     if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {

@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/T
 import { LLMModelConfig } from '@/types/llmModel'
 import { Settings2 } from 'lucide-react'
 
-export function Settings({
+export function ApiKeySettings({
     languageModel,
     onLanguageModelChange,
     e2bApiKey,

@@ -13,7 +13,7 @@ import type { LLMModelConfig } from '@/types/llmModel'
 // import { LLMModelConfig } from '@/lib/models'
 import modelsList from '@/lib/models.json'
 import { ModelPicker } from '@/components/ModelPicker'
-import { Settings } from '@/components/Settings'
+import { ApiKeySettings } from '@/components/ApiKeySettings.tsx'
 import { useMcpTools } from '@/hooks/useMcpTools.ts'
 // import { FragmentSchema } from '@/lib/schema'
 // import templates, { TemplateId } from '@/lib/templates'
@@ -87,15 +87,7 @@ export default function App() {
         onRemoveServer,
     } = useMcpTools({ e2bApiKey })
 
-    const filteredModels = modelsList.models.filter((model) => {
-        // if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
-        if (true) {
-            return model.providerId !== 'ollama'
-        }
-        return true
-    })
-
-    const currentModel = filteredModels.find(
+    const currentModel = modelsList.models.find(
         (model) => model.id === languageModel.model,
     )
     // const currentTemplate =
@@ -324,7 +316,7 @@ export default function App() {
                             languageModel={languageModel}
                             onLanguageModelChange={handleLanguageModelChange}
                         />
-                        <Settings
+                        <ApiKeySettings
                             e2bApiKey={e2bApiKey}
                             onE2bApiKeyChange={setE2bApiKey}
                             languageModel={languageModel}

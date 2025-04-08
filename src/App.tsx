@@ -20,6 +20,21 @@ import { Settings } from '@/components/Settings'
 // import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // import { DeepPartial } from 'ai'
 // import { usePostHog } from 'posthog-js/react'
+import { generateResponse } from './lib/chat'
+import { McpServer } from '@/types/mcpServer'
+import { CoreMessage, CoreUserMessage } from 'ai'
+
+// Assuming you have these types defined somewhere
+type UserContent = string; // Adjust this based on your actual content structure
+
+function transformToCoreMessages(messages: Message[]): CoreMessage[] {
+    return messages.map(msg => {
+        return {
+            role: msg.role,
+            content: msg.content,
+        } as CoreMessage; // Cast to the appropriate CoreMessage type
+    });
+}
 
 export default function App() {
     // const [queryClient] = useState(
@@ -97,15 +112,14 @@ export default function App() {
         setAbortController(controller)
 
         try {
-            // console.log(await getMcps())
+            const config = languageModel
+            const mcpServers: McpServer[] = [] // Define or get your MCP servers
 
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                body: JSON.stringify({ messages }),
-                signal: controller.signal,
-            })
+            // Transform messages to CoreMessage[]
+            const coreMessages = transformToCoreMessages(messages)
 
-            const data = await response.json()
+            // Call the generateResponse function directly
+            const response = await generateResponse(coreMessages, config, e2bApiKey, mcpServers, controller.signal)
 
             if (response.status !== 200) {
                 addMessage({
@@ -115,8 +129,8 @@ export default function App() {
             } else {
                 addMessage({
                     role: 'assistant',
-                    toolCalls: data.toolCalls,
-                    content: [{ type: 'text', text: data.text }],
+                    toolCalls: response.body.toolCalls,
+                    content: [{ type: 'text', text: response.body.text ?? "" }],
                 })
             }
             // setCurrentTab('fragment')

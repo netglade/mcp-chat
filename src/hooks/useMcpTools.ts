@@ -3,6 +3,7 @@ import { McpServer } from '@/types/mcpServer.ts'
 import { McpSandbox, startMcpSandbox } from '@netglade/mcp-sandbox'
 import { useState } from 'react'
 import { produce } from 'immer'
+import { useMutation } from '@tanstack/react-query'
 
 type UseMcpToolsArgs = {
     e2bApiKey: string
@@ -13,7 +14,7 @@ export const useMcpTools = ({
 }: UseMcpToolsArgs) => {
     const [mcpServers, setMcpServers] = useLocalStorage<McpServer[]>('mcpServers', [])
     const [sandboxes, setSandboxes] = useState<{ id: string, sandbox: McpSandbox }[]>([])
-
+    
     async function startServer(serverId: string) {
         const server = mcpServers.find((server) => server.id === serverId)
         if (!server) {
@@ -80,7 +81,7 @@ export const useMcpTools = ({
         }
     }
 
-    const onAddServer = ({
+    const addServerFn = async ({
         name,
         command,
         envs,
@@ -89,6 +90,10 @@ export const useMcpTools = ({
         command: string
         envs: Record<string, string>
     }) => {
+        // wait 2s
+        await new Promise((resolve) => setTimeout(resolve, 2000))
+        // await startServer({})
+
         // let serverToAdd: McpServer = {
         //     name: server.name,
         //     command: server.command,
@@ -113,6 +118,10 @@ export const useMcpTools = ({
         // startServer(serverToAdd.command, serverToAdd.envs, serverToAdd.id)
     }
 
+    const { mutate: onAddServer, isPending: isAddServerPending } = useMutation({
+        mutationFn: addServerFn,
+    })
+
     const onRemoveServer = (serverId: string) => {
         const server = mcpServers.find((server) => server.id === serverId)
         if (server) {
@@ -126,6 +135,7 @@ export const useMcpTools = ({
         mcpServers,
         extendOrRestartServer,
         onAddServer,
+        isAddServerPending,
         onRemoveServer,
     }
 }

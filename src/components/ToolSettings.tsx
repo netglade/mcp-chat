@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/T
 // Import Textarea component
 import { HammerIcon, LoaderCircle, PlusIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
+import { Spinner } from '@/components/ui/Spinner.tsx'
 
 type ToolSettingsProps = {
     mcpServers: McpServer[]
@@ -25,12 +26,14 @@ type ToolSettingsProps = {
         command: string
         envs: Record<string, string>
     }) => void
+    isAddServerPending: boolean
     onRemoveServer: (serverId: string) => void
 }
 
 export function ToolSettings({
     mcpServers,
     onAddServer,
+    isAddServerPending,
     onRemoveServer,
 }: ToolSettingsProps) {
     const [isOpen, setIsOpen] = useState(false)
@@ -42,7 +45,6 @@ export function ToolSettings({
     const [newEnvValue, setNewEnvValue] = useState('')
 
     const isLoading = false
-    const addMutationIsPending = false
     const removeMutationIsPending = false
 
     const handleAddEnv = () => {
@@ -87,6 +89,8 @@ export function ToolSettings({
 
     const handleAddTool = (e: React.FormEvent) => {
         e.preventDefault()
+        e.stopPropagation()
+
         if (newToolName.trim() && newToolCommand.trim()) {
             onAddServer({
                 name: newToolName,
@@ -363,10 +367,11 @@ export function ToolSettings({
                                         disabled={
                                             !newToolName.trim() ||
                                             !newToolCommand.trim() ||
-                                            addMutationIsPending
+                                            isAddServerPending
                                         }
                                     >
-                                        <PlusIcon className="h-4 w-4 mr-2" />
+                                        {!isAddServerPending && <PlusIcon className="h-4 w-4 mr-2" />}
+                                        <Spinner size="small" show={isAddServerPending} className="text-primary-foreground mr-2" />
                                         Create Tool
                                     </Button>
                                 </DialogFooter>

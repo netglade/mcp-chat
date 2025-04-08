@@ -18,7 +18,6 @@ import { useMcpTools } from '@/hooks/useMcpTools.ts'
 // import { FragmentSchema } from '@/lib/schema'
 // import templates, { TemplateId } from '@/lib/templates'
 // import { ExecutionResult } from '@/lib/types'
-// import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 // import { DeepPartial } from 'ai'
 // import { usePostHog } from 'posthog-js/react'
 import { generateResponse } from './lib/chat'
@@ -38,18 +37,6 @@ function transformToCoreMessages(messages: Message[]): CoreMessage[] {
 }
 
 export default function App() {
-    // const [queryClient] = useState(
-    //     () =>
-    //         new QueryClient({
-    //           defaultOptions: {
-    //             queries: {
-    //               staleTime: 60 * 1000, // 1 minute
-    //               // You can customize default options here
-    //             },
-    //           },
-    //         }),
-    // )
-    //
     // useEffect(() => {
     //   addMcp({
     //     name: 'postgres',
@@ -84,6 +71,7 @@ export default function App() {
     const {
         mcpServers,
         onAddServer,
+        isAddServerPending,
         onRemoveServer,
     } = useMcpTools({ e2bApiKey })
 
@@ -280,7 +268,6 @@ export default function App() {
     // }
 
     return (
-        // <QueryClientProvider client={queryClient}>
         <main className="flex min-h-screen max-h-screen">
             <div className="grid w-full md:grid-cols-2">
                 <div
@@ -309,6 +296,7 @@ export default function App() {
                         <ToolSettings
                             mcpServers={mcpServers}
                             onAddServer={onAddServer}
+                            isAddServerPending={isAddServerPending}
                             onRemoveServer={onRemoveServer}
                         />
                         <ModelPicker
@@ -326,6 +314,5 @@ export default function App() {
                 </div>
             </div>
         </main>
-        // </QueryClientProvider>
     )
 }

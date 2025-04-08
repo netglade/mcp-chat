@@ -312,7 +312,7 @@ export default function App() {
                             onRemoveServer={onRemoveServer}
                         />
                         <ModelPicker
-                            models={filteredModels}
+                            models={modelsList.models}
                             languageModel={languageModel}
                             onLanguageModelChange={handleLanguageModelChange}
                         />

@@ -1,7 +1,7 @@
 import { CoreMessage, experimental_createMCPClient, generateText, LanguageModel } from 'ai'
 import { getModelClient } from './models'
-import { LLMModel, LLMModelConfig } from '@/types/llmModel'
-import { extendOrRestartServer } from './mcp'
+import { LLMModelConfig } from '@/types/llmModel'
+// import { extendOrRestartServer } from './mcp'
 import { McpServer } from '@/types/mcpServer'
 
 export const maxDuration = 60
@@ -49,11 +49,11 @@ export async function generateResponse(
     config: LLMModelConfig,
     e2bApiKey: string,
     mcpServers: McpServer[],
-    signal?: AbortSignal
+    signal?: AbortSignal,
 ) {
     // Check if the signal is aborted
     if (signal?.aborted) {
-        throw new Error('Request was aborted');
+        throw new Error('Request was aborted')
     }
 
     //TODO: Rate limit??

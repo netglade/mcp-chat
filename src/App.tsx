@@ -23,7 +23,7 @@ import { useMcpTools } from '@/hooks/useMcpTools.ts'
 // import { usePostHog } from 'posthog-js/react'
 import { generateResponse } from './lib/chat'
 import { McpServer } from '@/types/mcpServer'
-import { CoreMessage, CoreUserMessage } from 'ai'
+import { CoreMessage } from 'ai'
 
 // Assuming you have these types defined somewhere
 type UserContent = string; // Adjust this based on your actual content structure
@@ -33,8 +33,8 @@ function transformToCoreMessages(messages: Message[]): CoreMessage[] {
         return {
             role: msg.role,
             content: msg.content,
-        } as CoreMessage; // Cast to the appropriate CoreMessage type
-    });
+        } as CoreMessage // Cast to the appropriate CoreMessage type
+    })
 }
 
 export default function App() {
@@ -85,7 +85,7 @@ export default function App() {
         mcpServers,
         onAddServer,
         onRemoveServer,
-    } = useMcpTools()
+    } = useMcpTools({ e2bApiKey })
 
     const filteredModels = modelsList.models.filter((model) => {
         // if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
@@ -137,7 +137,7 @@ export default function App() {
                 addMessage({
                     role: 'assistant',
                     toolCalls: response.body.toolCalls,
-                    content: [{ type: 'text', text: response.body.text ?? "" }],
+                    content: [{ type: 'text', text: response.body.text ?? '' }],
                 })
             }
             // setCurrentTab('fragment')

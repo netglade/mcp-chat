@@ -14,6 +14,7 @@ import type { LLMModelConfig } from '@/types/llmModel'
 import modelsList from '@/lib/models.json'
 import { ModelPicker } from '@/components/ModelPicker'
 import { Settings } from '@/components/Settings'
+import { useMcpTools } from '@/hooks/useMcpTools.ts'
 // import { FragmentSchema } from '@/lib/schema'
 // import templates, { TemplateId } from '@/lib/templates'
 // import { ExecutionResult } from '@/lib/types'
@@ -64,6 +65,12 @@ export default function App() {
     // const { session, apiKey } = useAuth(setAuthDialog, setAuthView)
 
     const [e2bApiKey, setE2bApiKey] = useLocalStorage<string>('e2bApiKey', '')
+
+    const {
+        mcpServers,
+        onAddServer,
+        onRemoveServer,
+    } = useMcpTools()
 
     const filteredModels = modelsList.models.filter((model) => {
         // if (process.env.NEXT_PUBLIC_HIDE_LOCAL_MODELS) {
@@ -293,7 +300,11 @@ export default function App() {
                         isMultiModal={currentModel?.multiModal || false}
                         handleFileChange={handleFileChange}
                     >
-                        <ToolSettings />
+                        <ToolSettings
+                            mcpServers={mcpServers}
+                            onAddServer={onAddServer}
+                            onRemoveServer={onRemoveServer}
+                        />
                         <ModelPicker
                             models={filteredModels}
                             languageModel={languageModel}

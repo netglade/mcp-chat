@@ -1,4 +1,4 @@
-import { Mcps, McpServer } from '@/types/mcpServer'
+import { McpServer } from '@/types/mcpServer'
 import { Button } from './ui/Button'
 import {
     Dialog,
@@ -18,7 +18,21 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/T
 import { HammerIcon, LoaderCircle, PlusIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 
-export function ToolSettings() {
+type ToolSettingsProps = {
+    mcpServers: McpServer[]
+    onAddServer: (args: {
+        name: string
+        command: string
+        envs: Record<string, string>
+    }) => void
+    onRemoveServer: (serverId: string) => void
+}
+
+export function ToolSettings({
+    mcpServers,
+    onAddServer,
+    onRemoveServer,
+}: ToolSettingsProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedTool, setSelectedTool] = useState<McpServer | null>(null)
     const [newToolName, setNewToolName] = useState('')
@@ -27,13 +41,9 @@ export function ToolSettings() {
     const [newEnvKey, setNewEnvKey] = useState('')
     const [newEnvValue, setNewEnvValue] = useState('')
 
-    const mcps: Mcps = { servers: [] }
     const isLoading = false
-
-    const removeMutation = {
-        mutate: (x: any) => {
-        }, isPending: false,
-    }
+    const addMutationIsPending = false
+    const removeMutationIsPending = false
 
     const handleAddEnv = () => {
         if (newEnvKey.trim() && newEnvValue.trim()) {
@@ -54,11 +64,6 @@ export function ToolSettings() {
         })
     }
 
-    const addMutation = {
-        mutate: (x: any) => {
-        }, isPending: false,
-    }
-
     const handleOpenTool = (tool: McpServer) => {
         setSelectedTool(tool)
         setIsOpen(true)
@@ -76,15 +81,14 @@ export function ToolSettings() {
 
     const handleDeleteTool = () => {
         if (selectedTool) {
-            removeMutation.mutate(selectedTool.id)
+            onRemoveServer(selectedTool.id)
         }
     }
 
     const handleAddTool = (e: React.FormEvent) => {
         e.preventDefault()
         if (newToolName.trim() && newToolCommand.trim()) {
-            // Note: Update your addMcp function to accept these new parameters
-            addMutation.mutate({
+            onAddServer({
                 name: newToolName,
                 command: newToolCommand,
                 envs: newToolEnvs,
@@ -132,9 +136,9 @@ export function ToolSettings() {
                             </div>
                         ) : (
                             <div className="max-h-40 overflow-y-auto">
-                                {mcps?.servers && mcps.servers.length > 0 ? (
+                                {mcpServers && mcpServers.length > 0 ? (
                                     <ul className="space-y-1">
-                                        {mcps.servers.map((server) => (
+                                        {mcpServers.map((server) => (
                                             <li
                                                 key={server.id}
                                                 className="text-sm py-1 px-1 rounded cursor-pointer hover:bg-accent flex items-center justify-between"
@@ -242,7 +246,7 @@ export function ToolSettings() {
                                 <Button
                                     variant="destructive"
                                     onClick={handleDeleteTool}
-                                    disabled={removeMutation.isPending}
+                                    disabled={removeMutationIsPending}
                                 >
                                     <TrashIcon className="h-4 w-4 mr-2" />
                                     Delete Tool
@@ -359,7 +363,7 @@ export function ToolSettings() {
                                         disabled={
                                             !newToolName.trim() ||
                                             !newToolCommand.trim() ||
-                                            addMutation.isPending
+                                            addMutationIsPending
                                         }
                                     >
                                         <PlusIcon className="h-4 w-4 mr-2" />

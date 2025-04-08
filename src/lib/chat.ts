@@ -1,8 +1,9 @@
 import { CoreMessage, experimental_createMCPClient, generateText, LanguageModel } from 'ai'
 import { getModelClient } from './models'
-import { LLMModelConfig } from '@/types/llmModel'
-// import { extendOrRestartServer } from './mcp'
-import { McpServer } from '@/types/mcpServer'
+import { LLMModel, LLMModelConfig } from '@/types/llmModel'
+import { extendOrRestartServer } from './mcp'
+import { McpServer, McpServerState } from '@/types/mcpServer'
+import { startMcpSandbox } from '@netglade/mcp-sandbox'
 
 export const maxDuration = 60
 
@@ -44,6 +45,59 @@ async function waitForServerReady(url: string, maxAttempts = 5): Promise<boolean
     return false
 }
 
+async function tryExtendMcpSandboxTimeout(server: McpServer) {
+    if (server.sandbox) {
+        const isRunning = await server.sandbox.sandbox.isRunning()
+
+        if (isRunning == false) {
+            return false;
+        }
+
+        // Extend timeout if server is running
+        await server.sandbox.sandbox.setTimeout(300_000)
+        console.log('Server is running, timeout extended:', server.url)
+        return true; // Not restarted
+    }
+    console.warn('Sandbox not set on server')
+    return false
+}
+
+async function restartMcpSandbox(server: McpServer) {
+    // Server not running, restart it
+    try {
+        const sandbox = await startMcpSandbox({
+            command: server.command,
+            apiKey: e2bApiKey,
+            envs: server.envs,
+            timeoutMs: 1000 * 60 * 10,
+        });
+
+        const newUrl = sandbox.getUrl();
+
+        // Update server with new sandbox and URL
+        server.url = newUrl;
+        server.sandbox = sandbox;
+        server.state = 'running' as McpServerState;
+
+        console.log('Server starting on: ', newUrl);
+
+        // Wait for the server to be initialized
+        const isReady = await waitForServerReady(server.url);
+        if (!isReady) {
+            console.log(`Server ${server.name} failed to initialize properly after restart`);
+            server.state = 'error' as McpServerState; // Update state if not ready
+            return false; // Indicate failure to initialize
+        }
+
+        return true; // Was restarted and is ready
+    } catch (error) {
+        console.error('Failed to restart server:', error);
+        server.state = 'error' as McpServerState;
+        throw error; // Propagate the error
+    }
+}
+
+
 export async function generateResponse(
     messages: CoreMessage[],
     config: LLMModelConfig,
@@ -83,34 +137,35 @@ export async function generateResponse(
         const readyServers: typeof mcpServers = []
         const needsInitialization: typeof mcpServers = []
 
-        // Phase 1: Check all servers, extend or restart as needed
-        console.log('Phase 1: Checking servers...')
-        for (const server of mcpServers) {
+        const extendPromises = mcpServers.map(async (server) => {
             try {
-                const wasRestarted = await extendOrRestartServer(server.id, e2bApiKey)
-                if (wasRestarted) {
-                    needsInitialization.push(server)
+                const wasExtended = await tryExtendMcpSandboxTimeout(server)
+                if (wasExtended) {
+                    readyServers.push(server) // Collect servers that were successfully extended
                 } else {
-                    readyServers.push(server)
+                    needsInitialization.push(server) // Collect servers that need to be restarted
                 }
             } catch (error) {
-                console.error(`Failed to handle server ${server.name}:`, error)
-
+                console.error(`Failed to extend server ${server.name}:`, error)
             }
-        }
+        });
+
+        await Promise.all(extendPromises); 
 
         // Phase 2: Wait for restarted servers to be ready
         console.log('Phase 2: Waiting for restarted servers...')
-        for (const server of needsInitialization) {
+        const initializationPromises = needsInitialization.map(async (server) => {
             if (server.url) {
-                const isReady = await waitForServerReady(server.url)
-                if (!isReady) {
-                    console.log(`Server ${server.name} failed to initialize properly`)
-                    continue
+                const wasRestarted = await restartMcpSandbox(server); // Call the restart function
+                if (!wasRestarted) {
+                    console.log(`Server ${server.name} failed to initialize properly after restart`);
+                    return; // Skip adding to readyServers
                 }
-                readyServers.push(server)
+                readyServers.push(server); // Add to readyServers if successfully restarted and initialized
             }
-        }
+        });
+
+        await Promise.all(initializationPromises);
 
         // Phase 3: Create clients for all ready servers
         console.log('Phase 3: Creating clients...')

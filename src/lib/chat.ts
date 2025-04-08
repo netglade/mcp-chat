@@ -46,11 +46,15 @@ async function waitForServerReady(url: string, maxAttempts = 5): Promise<boolean
 
 export async function generateResponse(
     messages: CoreMessage[],
-    model: LLMModel,
     config: LLMModelConfig,
     e2bApiKey: string,
     mcpServers: McpServer[],
+    signal?: AbortSignal
 ) {
+    // Check if the signal is aborted
+    if (signal?.aborted) {
+        throw new Error('Request was aborted');
+    }
 
     //TODO: Rate limit??
     // const limit = !config.apiKey

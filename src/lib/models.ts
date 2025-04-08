@@ -1,6 +1,6 @@
 import { createAnthropic } from '@ai-sdk/anthropic'
 import { createGoogleGenerativeAI } from '@ai-sdk/google'
-import { createVertex } from '@ai-sdk/google-vertex'
+// import { createVertex } from '@ai-sdk/google-vertex'
 import { createMistral } from '@ai-sdk/mistral'
 import { createOpenAI } from '@ai-sdk/openai'
 import { createOllama } from 'ollama-ai-provider'
@@ -32,14 +32,14 @@ export function getModelClient(model: LLMModel, config: LLMModelConfig) {
                 apiKey: apiKey,
                 baseURL: baseURL || 'https://api.fireworks.ai/inference/v1',
             })(modelNameString),
-        vertex: () =>
-            createVertex({
-                googleAuthOptions: {
-                    credentials: JSON.parse(
-                        '{}',
-                    ),
-                },
-            })(modelNameString),
+        // vertex: () =>
+        //     createVertex({
+        //         googleAuthOptions: {
+        //             credentials: JSON.parse(
+        //                 '{}',
+        //             ),
+        //         },
+        //     })(modelNameString),
         xai: () =>
             createOpenAI({
                 apiKey: apiKey,

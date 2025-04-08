@@ -2,6 +2,7 @@ import { useLocalStorage } from 'usehooks-ts'
 import { McpServer } from '@/types/mcpServer.ts'
 import { McpSandbox, startMcpSandbox } from '@netglade/mcp-sandbox'
 import { useState } from 'react'
+import { produce } from 'immer'
 
 type UseMcpToolsArgs = {
     e2bApiKey: string
@@ -30,24 +31,14 @@ export const useMcpTools = ({
 
         const url = sandbox.getUrl()
 
-        setSandboxes((oldValue) => [
-            ...oldValue,
-            {
-                id: serverId,
-                sandbox,
-            },
-        ])
-        setMcpServers((oldValue) => {
-            const newValue = [...oldValue]
-            const index = newValue.findIndex((x) => x.id === serverId)
-            newValue[index] = {
-                ...newValue[index],
-                url,
-                state: 'running',
+        setSandboxes(produce((draft) => draft.push({ id: serverId, sandbox })))
+        setMcpServers(produce((draft) => {
+            const server = draft.find((server) => server.id === serverId)
+            if (server) {
+                server.url = url
+                server.state = 'running'
             }
-
-            return newValue
-        })
+        }))
     }
 
     async function extendOrRestartServer(serverId: string): Promise<boolean> {
@@ -78,16 +69,12 @@ export const useMcpTools = ({
         } catch (error) {
             console.error('Failed to restart server:', error)
 
-            setMcpServers((oldValue) => {
-                const newValue = [...oldValue]
-                const index = newValue.findIndex((x) => x.id === serverId)
-                newValue[index] = {
-                    ...newValue[index],
-                    state: 'error',
+            setMcpServers(produce((draft) => {
+                const server = draft.find((server) => server.id === serverId)
+                if (server) {
+                    server.state = 'error'
                 }
-
-                return newValue
-            })
+            }))
 
             throw error // Propagate the error
         }

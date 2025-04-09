@@ -21,20 +21,22 @@ import { Spinner } from '@/components/ui/Spinner.tsx'
 
 type ToolSettingsProps = {
     mcpServers: McpServer[]
-    onAddServer: (args: {
+    onAddServerAsync: (args: {
         name: string
         command: string
         envs: Record<string, string>
-    }) => void
+    }) => Promise<void>
     isAddServerPending: boolean
-    onRemoveServer: (serverId: string) => void
+    onRemoveServerAsync: (serverId: string) => Promise<void>
+    isRemoveServerPending: boolean
 }
 
 export function ToolSettings({
     mcpServers,
-    onAddServer,
+    onAddServerAsync,
     isAddServerPending,
-    onRemoveServer,
+    onRemoveServerAsync,
+    isRemoveServerPending,
 }: ToolSettingsProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [selectedTool, setSelectedTool] = useState<McpServer | null>(null)
@@ -45,7 +47,6 @@ export function ToolSettings({
     const [newEnvValue, setNewEnvValue] = useState('')
 
     const isLoading = false
-    const removeMutationIsPending = false
 
     const handleAddEnv = () => {
         if (newEnvKey.trim() && newEnvValue.trim()) {
@@ -81,22 +82,24 @@ export function ToolSettings({
         setIsOpen(true)
     }
 
-    const handleDeleteTool = () => {
+    const handleDeleteTool = async () => {
         if (selectedTool) {
-            onRemoveServer(selectedTool.id)
+            await onRemoveServerAsync(selectedTool.id)
+            setIsOpen(false)
         }
     }
 
-    const handleAddTool = (e: React.FormEvent) => {
+    const handleAddTool = async (e: React.FormEvent) => {
         e.preventDefault()
         e.stopPropagation()
 
         if (newToolName.trim() && newToolCommand.trim()) {
-            onAddServer({
+            await onAddServerAsync({
                 name: newToolName,
                 command: newToolCommand,
                 envs: newToolEnvs,
             })
+            setIsOpen(false)
         }
     }
 
@@ -250,7 +253,7 @@ export function ToolSettings({
                                 <Button
                                     variant="destructive"
                                     onClick={handleDeleteTool}
-                                    disabled={removeMutationIsPending}
+                                    disabled={isRemoveServerPending}
                                 >
                                     <TrashIcon className="h-4 w-4 mr-2" />
                                     Delete Tool

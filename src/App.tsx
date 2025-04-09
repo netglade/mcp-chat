@@ -70,9 +70,12 @@ export default function App() {
 
     const {
         mcpServers,
-        onAddServer,
+        sandboxes,
+        extendOrRestartServer,
+        onAddServerAsync,
         isAddServerPending,
-        onRemoveServer,
+        onRemoveServerAsync,
+        isRemoveServerPending,
     } = useMcpTools({ e2bApiKey })
 
     const currentModel = modelsList.models.find(
@@ -295,9 +298,10 @@ export default function App() {
                     >
                         <ToolSettings
                             mcpServers={mcpServers}
-                            onAddServer={onAddServer}
+                            onAddServerAsync={onAddServerAsync}
                             isAddServerPending={isAddServerPending}
-                            onRemoveServer={onRemoveServer}
+                            onRemoveServerAsync={onRemoveServerAsync}
+                            isRemoveServerPending={isRemoveServerPending}
                         />
                         <ModelPicker
                             models={modelsList.models}

@@ -8,9 +8,6 @@ import {
     SelectValue,
 } from '@/components/ui/Select'
 import { LLMModel, LLMModelConfig } from '@/types/llmModel'
-// import 'core-js/features/object/group-by.js'
-// import Image from 'next/image'
-// import nextConfig from '@/next.config'
 
 export function ModelPicker({
     models,

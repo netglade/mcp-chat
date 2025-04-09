@@ -14,7 +14,6 @@ import { Input } from './ui/Input'
 import { Label } from './ui/Label'
 import { Textarea } from './ui/Textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/Tooltip'
-// Import Textarea component
 import { HammerIcon, LoaderCircle, PlusIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner.tsx'

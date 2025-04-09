@@ -47,7 +47,7 @@ export const useMcpTools = ({
             })
             const url = sandbox.getUrl()
 
-            const success = await waitForServerReady(sandbox.getUrl())
+            const success = await waitForServerReady(sandbox.getUrl(), 5)
             if (!success) {
                 setServerClients(produce((draft) => {
                     const client = draft.find((c) => c.id === serverConfiguration.id)
@@ -55,7 +55,8 @@ export const useMcpTools = ({
                         client.state = 'error'
                     }
                 }))
-                return
+
+                throw new Error(`Server \`${serverConfiguration.name}\` not ready`)
             }
 
             const aiClient = await experimental_createMCPClient({
@@ -88,33 +89,25 @@ export const useMcpTools = ({
         }
     }
 
-    async function extendOrRestartServer(serverId: string): Promise<boolean> {
-        const serverConfiguration = serverConfigurations.find(s => s.id === serverId)
-        const client = serverClients.find((c) => c.id === serverId)
-
-        if (!serverConfiguration || !client) {
-            throw new Error(`Server or sandbox not found. ID: ${serverId}`)
-        }
-
+    async function extendOrRestartServer(client: McpServerClient): Promise<void> {
         // Check if server is running
         if (client.sandbox) {
             const isRunning = await client.sandbox.sandbox.isRunning()
             if (isRunning) {
                 // Extend timeout if server is running
                 await client.sandbox.sandbox.setTimeout(300_000)
-                console.log(`Server \`${serverConfiguration.name}\` is running, timeout extended:`, client.url)
-                return false // Not restarted
+                console.log(`Server \`${client.configuration.name}\` is running, timeout extended:`, client.url)
+                return
             }
-            console.log(`Server \`${serverConfiguration.name}\` stopped, restarting...`)
+            console.log(`Server \`${client.configuration.name}\` stopped, restarting...`)
         }
 
         // Server not running, restart it
         try {
-            await startServer(serverConfiguration)
-            console.log(`Server \`${serverConfiguration.name}\` restarted successfully:`) //, newUrl)
-            return true // Was restarted
+            await startServer(client.configuration)
+            console.log(`Server \`${client.configuration.name}\` restarted successfully:`) //, newUrl)
         } catch (error) {
-            console.error(`Failed to restart server \`${serverConfiguration.name}\`:`, error)
+            console.error(`Failed to restart server \`${client.configuration.name}\`:`, error)
             throw error // Propagate the error
         }
     }

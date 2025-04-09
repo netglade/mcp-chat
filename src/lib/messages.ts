@@ -1,4 +1,5 @@
 import { Message } from '@/types/message'
+import { CoreMessage } from 'ai'
 
 export function toAISDKMessages(messages: Message[]) {
     return messages.map((message) => ({
@@ -13,7 +14,7 @@ export function toAISDKMessages(messages: Message[]) {
 
             return content
         }),
-    }))
+    } as CoreMessage))
 }
 
 export async function toMessageImage(files: File[]) {

@@ -4,7 +4,7 @@ import { ChatInput } from '@/components/ChatInput'
 import { ToolSettings } from '@/components/ToolSettings'
 import { NavBar } from '@/components/NavBar'
 import { SetStateAction, useState } from 'react'
-import { toAISDKMessages, toMessageImage } from '@/lib/messages'
+import { toMessageImage } from '@/lib/messages'
 import type { Message } from '@/types/message'
 import { useLocalStorage } from 'usehooks-ts'
 import type { LLMModelConfig } from '@/types/llmModel'
@@ -20,21 +20,7 @@ import { useMcpTools } from '@/hooks/useMcpTools.ts'
 // import { ExecutionResult } from '@/lib/types'
 // import { DeepPartial } from 'ai'
 // import { usePostHog } from 'posthog-js/react'
-import { generateResponse } from './lib/chat'
-import { McpServerConfiguration } from '@/types/mcpServer'
-import { CoreMessage } from 'ai'
-
-// Assuming you have these types defined somewhere
-type UserContent = string; // Adjust this based on your actual content structure
-
-function transformToCoreMessages(messages: Message[]): CoreMessage[] {
-    return messages.map(msg => {
-        return {
-            role: msg.role,
-            content: msg.content,
-        } as CoreMessage // Cast to the appropriate CoreMessage type
-    })
-}
+import { useChat } from '@/hooks/useChat.ts'
 
 export default function App() {
     // useEffect(() => {
@@ -77,6 +63,12 @@ export default function App() {
         isRemoveServerPending,
     } = useMcpTools({ e2bApiKey })
 
+    const { generateResponseAsync, isGenerateResponsePending } = useChat({
+        clients: serverClients,
+        languageModelConfig: languageModel,
+        extendOrRestartServer,
+    })
+
     const currentModel = modelsList.models.find(
         (model) => model.id === languageModel.model,
     )
@@ -101,29 +93,19 @@ export default function App() {
         setAbortController(controller)
 
         try {
-            const config = languageModel
-            const mcpServers: McpServerConfiguration[] = [] // Define or get your MCP servers
-
-            // Transform messages to CoreMessage[]
-            const coreMessages = transformToCoreMessages(messages)
-
-            // Call the generateResponse function directly
-            const response = await generateResponse(coreMessages, config, e2bApiKey, mcpServers, controller.signal)
-
-            if (response.status !== 200) {
+            try {
+                const response = await generateResponseAsync({ messages })
+                addMessage({
+                    role: 'assistant',
+                    toolCalls: response.toolCalls,
+                    content: [{ type: 'text', text: response.text ?? '' }],
+                })
+            } catch {
                 addMessage({
                     role: 'assistant',
                     content: [{ type: 'text', text: 'Ups, something went wrong...' }],
                 })
-            } else {
-                addMessage({
-                    role: 'assistant',
-                    toolCalls: response.body.toolCalls,
-                    content: [{ type: 'text', text: response.body.text ?? '' }],
-                })
             }
-            // setCurrentTab('fragment')
-            // setIsPreviewLoading(false)
         } catch (err: any) {
             if (err.name === 'AbortError') {
                 console.log('Fetch operation was aborted')
@@ -209,7 +191,7 @@ export default function App() {
         })
 
         submit({
-            messages: toAISDKMessages(updatedMessages),
+            messages: updatedMessages,
         })
 
         setChatInput('')
@@ -223,7 +205,7 @@ export default function App() {
 
     function retry() {
         submit({
-            messages: toAISDKMessages(messages),
+            messages,
         })
     }
 

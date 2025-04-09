@@ -1,4 +1,5 @@
 import { McpSandbox } from '@netglade/mcp-sandbox'
+import { experimental_createMCPClient } from 'ai'
 
 export type McpServerState = 'loading' | 'running' | 'error'
 
@@ -15,4 +16,6 @@ export type McpServerClient = {
     state: McpServerState
     sandbox?: McpSandbox
     url?: string
+    client?: Awaited<ReturnType<typeof experimental_createMCPClient>>
+    tools?: Awaited<ReturnType<Awaited<ReturnType<typeof experimental_createMCPClient>>['tools']>>
 }

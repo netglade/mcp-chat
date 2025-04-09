@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { produce } from 'immer'
 import { useMutation } from '@tanstack/react-query'
 import { v4 as uuidv4 } from 'uuid'
+import { experimental_createMCPClient } from 'ai'
 
 type UseMcpToolsArgs = {
     e2bApiKey: string
@@ -28,32 +29,52 @@ export const useMcpTools = ({
     }, [])
 
     async function startServer(serverConfiguration: McpServerConfiguration) {
-        console.log(`Starting server \`${serverConfiguration.name}\`...`)
+        try {
+            console.log(`Starting server \`${serverConfiguration.name}\`...`)
 
-        setServerClients(produce((draft) => {
-            const client = draft.find((c) => c.id === serverConfiguration.id)
-            if (client) {
-                client.state = 'loading'
-            }
-        }))
+            setServerClients(produce((draft) => {
+                const client = draft.find((c) => c.id === serverConfiguration.id)
+                if (client) {
+                    client.state = 'loading'
+                }
+            }))
 
-        const sandbox = await startMcpSandbox({
-            command: serverConfiguration.command,
-            apiKey: e2bApiKey,
-            envs: serverConfiguration.envs,
-            timeoutMs: 1000 * 60 * 10,
-        })
+            const sandbox = await startMcpSandbox({
+                command: serverConfiguration.command,
+                apiKey: e2bApiKey,
+                envs: serverConfiguration.envs,
+                timeoutMs: 1000 * 60 * 10,
+            })
 
-        const url = sandbox.getUrl()
+            const url = sandbox.getUrl()
+            const aiClient = await experimental_createMCPClient({
+                transport: {
+                    type: 'sse',
+                    url,
+                },
+            })
+            const tools = await aiClient.tools()
 
-        setServerClients(produce((draft) => {
-            const client = draft.find((c) => c.id === serverConfiguration.id)
-            if (client) {
-                client.state = 'running'
-                client.sandbox = sandbox
-                client.url = url
-            }
-        }))
+            setServerClients(produce((draft) => {
+                const client = draft.find((c) => c.id === serverConfiguration.id)
+                if (client) {
+                    client.state = 'running'
+                    client.sandbox = sandbox
+                    client.url = url
+                    client.client = aiClient
+                    client.tools = tools
+                }
+            }))
+        } catch (error) {
+            setServerClients(produce((draft) => {
+                const client = draft.find((c) => c.id === serverConfiguration.id)
+                if (client) {
+                    client.state = 'error'
+                }
+            }))
+
+            throw error // Propagate the error
+        }
     }
 
     async function extendOrRestartServer(serverId: string): Promise<boolean> {
@@ -83,14 +104,6 @@ export const useMcpTools = ({
             return true // Was restarted
         } catch (error) {
             console.error(`Failed to restart server \`${serverConfiguration.name}\`:`, error)
-
-            setServerClients(produce((draft) => {
-                const client = draft.find((c) => c.id === serverId)
-                if (client) {
-                    client.state = 'error'
-                }
-            }))
-
             throw error // Propagate the error
         }
     }

@@ -69,16 +69,6 @@ export function Chat({
                                                         </span>
                                                     </div>
                                                 ))}
-
-                                                {toolCall.result && (
-                                                    <div className="mt-1 border-t border-gray-400">
-                                                        <span className="text-gray-200 ml-1">
-                                                            {typeof toolCall.result === 'object'
-                                                                ? JSON.stringify(toolCall.result)
-                                                                : toolCall.result}
-                                                        </span>
-                                                    </div>
-                                                )}
                                             </div>
                                         )}
                                     </div>

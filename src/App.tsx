@@ -23,9 +23,6 @@ export default function App() {
             model: 'claude-3-5-sonnet-latest',
         },
     )
-    const languageModel = modelsList.models.find(
-        (model) => model.id === languageModelConfiguration.model,
-    )
     const [e2bApiKey, setE2bApiKey] = useLocalStorage<string>('e2bApiKey', '')
 
     const {

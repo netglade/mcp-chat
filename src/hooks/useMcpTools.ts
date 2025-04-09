@@ -1,6 +1,6 @@
 import { useLocalStorage } from 'usehooks-ts'
-import { McpServer } from '@/types/mcpServer.ts'
-import { McpSandbox, startMcpSandbox } from '@netglade/mcp-sandbox'
+import { McpServerClient, McpServerConfiguration } from '@/types/mcpServer.ts'
+import { startMcpSandbox } from '@netglade/mcp-sandbox'
 import { useEffect, useState } from 'react'
 import { produce } from 'immer'
 import { useMutation } from '@tanstack/react-query'
@@ -13,78 +13,81 @@ type UseMcpToolsArgs = {
 export const useMcpTools = ({
     e2bApiKey,
 }: UseMcpToolsArgs) => {
-    const [mcpServers, setMcpServers] = useLocalStorage<McpServer[]>('mcpServers', [])
-    const [sandboxes, setSandboxes] = useState<{ id: string, sandbox: McpSandbox }[]>([])
+    const [serverConfigurations, setServerConfigurations] = useLocalStorage<McpServerConfiguration[]>('mcpServerConfigurations', [])
+    const [serverClients, setServerClients] = useState<McpServerClient[]>(serverConfigurations.map((configuration) => ({
+        id: configuration.id,
+        configuration,
+        state: 'loading',
+    })))
 
     useEffect(() => {
-        for (const server of mcpServers) {
-            startServer(server)
+        for (const serverConfiguration of serverConfigurations) {
+            startServer(serverConfiguration)
         }
-
-        setMcpServers(mcpServers.map((s) => ({
-            ...s,
-            url: undefined,
-            state: 'loading',
-        })))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    async function startServer(server: McpServer) {
-        console.log(`Starting server \`${server.name}\`...`)
+    async function startServer(serverConfiguration: McpServerConfiguration) {
+        console.log(`Starting server \`${serverConfiguration.name}\`...`)
+
+        setServerClients(produce((draft) => {
+            const client = draft.find((c) => c.id === serverConfiguration.id)
+            if (client) {
+                client.state = 'loading'
+            }
+        }))
 
         const sandbox = await startMcpSandbox({
-            command: server.command,
+            command: serverConfiguration.command,
             apiKey: e2bApiKey,
-            envs: server.envs,
+            envs: serverConfiguration.envs,
             timeoutMs: 1000 * 60 * 10,
         })
 
         const url = sandbox.getUrl()
 
-        setSandboxes(produce((draft) => {
-            draft.push({ id: server.id, sandbox })
-        }))
-        setMcpServers(produce((draft) => {
-            const serverToUpdate = draft.find((s) => s.id === server.id)
-            if (serverToUpdate) {
-                serverToUpdate.url = url
-                serverToUpdate.state = 'running'
+        setServerClients(produce((draft) => {
+            const client = draft.find((c) => c.id === serverConfiguration.id)
+            if (client) {
+                client.state = 'running'
+                client.sandbox = sandbox
+                client.url = url
             }
         }))
     }
 
     async function extendOrRestartServer(serverId: string): Promise<boolean> {
-        const server = mcpServers.find(server => server.id === serverId)
-        const sandbox = sandboxes.find((s) => s.id === serverId)?.sandbox
+        const serverConfiguration = serverConfigurations.find(s => s.id === serverId)
+        const client = serverClients.find((c) => c.id === serverId)
 
-        if (!server || !sandbox) {
+        if (!serverConfiguration || !client) {
             throw new Error(`Server or sandbox not found. ID: ${serverId}`)
         }
 
         // Check if server is running
-        if (sandbox) {
-            const isRunning = await sandbox.sandbox.isRunning()
+        if (client.sandbox) {
+            const isRunning = await client.sandbox.sandbox.isRunning()
             if (isRunning) {
                 // Extend timeout if server is running
-                await sandbox.sandbox.setTimeout(300_000)
-                console.log(`Server \`${server.name}\` is running, timeout extended:`, server.url)
+                await client.sandbox.sandbox.setTimeout(300_000)
+                console.log(`Server \`${serverConfiguration.name}\` is running, timeout extended:`, client.url)
                 return false // Not restarted
             }
-            console.log(`Server \`${server.name}\` stopped, restarting...`)
+            console.log(`Server \`${serverConfiguration.name}\` stopped, restarting...`)
         }
 
         // Server not running, restart it
         try {
-            await startServer(server)
-            console.log(`Server \`${server.name}\` restarted successfully:`) //, newUrl)
+            await startServer(serverConfiguration)
+            console.log(`Server \`${serverConfiguration.name}\` restarted successfully:`) //, newUrl)
             return true // Was restarted
         } catch (error) {
-            console.error(`Failed to restart server \`${server.name}\`:`, error)
+            console.error(`Failed to restart server \`${serverConfiguration.name}\`:`, error)
 
-            setMcpServers(produce((draft) => {
-                const server = draft.find((server) => server.id === serverId)
-                if (server) {
-                    server.state = 'error'
+            setServerClients(produce((draft) => {
+                const client = draft.find((c) => c.id === serverId)
+                if (client) {
+                    client.state = 'error'
                 }
             }))
 
@@ -101,13 +104,11 @@ export const useMcpTools = ({
         command: string
         envs: Record<string, string>
     }) => {
-        const serverToAdd: McpServer = {
+        const configuration: McpServerConfiguration = {
             name,
             command,
             envs,
             id: uuidv4(),
-            state: 'loading',
-            url: undefined,
         }
 
         // // Check if a postgres server already exists
@@ -120,20 +121,27 @@ export const useMcpTools = ({
         //     return;
         // }
 
-        setMcpServers(produce((draft) => {
-            draft.push(serverToAdd)
+        setServerConfigurations(produce((draft) => {
+            draft.push(configuration)
         }))
-        startServer(serverToAdd)
+        setServerClients(produce((draft) => {
+            draft.push({
+                id: configuration.id,
+                configuration,
+                state: 'loading',
+            })
+        }))
+        startServer(configuration)
     }
 
     const removeServerFn = async (serverId: string) => {
-        const sandbox = sandboxes.find((s) => s.id === serverId)?.sandbox
-        if (sandbox) {
-            await sandbox.sandbox.kill()
+        const client = serverClients.find((s) => s.id === serverId)
+        if (client?.sandbox) {
+            await client.sandbox.sandbox.kill()
         }
 
-        setMcpServers((prev) => prev.filter((server) => server.id !== serverId))
-        setSandboxes((prev => prev.filter((s) => s.id !== serverId)))
+        setServerConfigurations((prev) => prev.filter((server) => server.id !== serverId))
+        setServerClients((prev => prev.filter((s) => s.id !== serverId)))
     }
 
     const { mutateAsync: onAddServerAsync, isPending: isAddServerPending } = useMutation({
@@ -145,8 +153,7 @@ export const useMcpTools = ({
     })
 
     return {
-        mcpServers,
-        sandboxes,
+        serverClients,
         extendOrRestartServer,
         onAddServerAsync,
         isAddServerPending,

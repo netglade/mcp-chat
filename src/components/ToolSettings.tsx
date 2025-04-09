@@ -1,4 +1,4 @@
-import { McpServer } from '@/types/mcpServer'
+import { McpServerClient } from '@/types/mcpServer'
 import { Button } from './ui/Button'
 import {
     Dialog,
@@ -20,7 +20,7 @@ import { useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner.tsx'
 
 type ToolSettingsProps = {
-    mcpServers: McpServer[]
+    serverClients: McpServerClient[]
     onAddServerAsync: (args: {
         name: string
         command: string
@@ -32,14 +32,14 @@ type ToolSettingsProps = {
 }
 
 export function ToolSettings({
-    mcpServers,
+    serverClients,
     onAddServerAsync,
     isAddServerPending,
     onRemoveServerAsync,
     isRemoveServerPending,
 }: ToolSettingsProps) {
     const [isOpen, setIsOpen] = useState(false)
-    const [selectedTool, setSelectedTool] = useState<McpServer | null>(null)
+    const [selectedTool, setSelectedTool] = useState<McpServerClient | null>(null)
     const [newToolName, setNewToolName] = useState('')
     const [newToolCommand, setNewToolCommand] = useState('')
     const [newToolEnvs, setNewToolEnvs] = useState<Record<string, string>>({})
@@ -67,7 +67,7 @@ export function ToolSettings({
         })
     }
 
-    const handleOpenTool = (tool: McpServer) => {
+    const handleOpenTool = (tool: McpServerClient) => {
         setSelectedTool(tool)
         setIsOpen(true)
     }
@@ -143,21 +143,21 @@ export function ToolSettings({
                             </div>
                         ) : (
                             <div className="max-h-40 overflow-y-auto">
-                                {mcpServers && mcpServers.length > 0 ? (
+                                {serverClients && serverClients.length > 0 ? (
                                     <ul className="space-y-1">
-                                        {mcpServers.map((server) => (
+                                        {serverClients.map((client) => (
                                             <li
-                                                key={server.id}
+                                                key={client.id}
                                                 className="text-sm py-1 px-1 rounded cursor-pointer hover:bg-accent flex items-center justify-between"
-                                                onClick={() => handleOpenTool(server)}
+                                                onClick={() => handleOpenTool(client)}
                                             >
-                                                <span>{server.name}</span>
-                                                {server.state === 'loading' ? (
+                                                <span>{client.configuration.name}</span>
+                                                {client.state === 'loading' ? (
                                                     <LoaderCircle className="h-3 w-3 animate-spin ml-2" />
                                                 ) : (
                                                     <div
                                                         className={`w-2 h-2 rounded-full ml-2 ${
-                                                            server.state === 'running'
+                                                            client.state === 'running'
                                                                 ? 'bg-green-500'
                                                                 : 'bg-red-500'
                                                         }`}
@@ -184,7 +184,7 @@ export function ToolSettings({
                         // Edit/View Tool Dialog
                         <>
                             <DialogHeader>
-                                <DialogTitle>{selectedTool.name}</DialogTitle>
+                                <DialogTitle>{selectedTool.configuration.name}</DialogTitle>
                                 <DialogDescription>MCP tool</DialogDescription>
                             </DialogHeader>
 
@@ -215,21 +215,21 @@ export function ToolSettings({
                                 <div>
                                     <Label>Command</Label>
                                     <Textarea
-                                        value={selectedTool.command}
+                                        value={selectedTool.configuration.command}
                                         readOnly
                                         className="mt-1 bg-muted font-mono text-sm resize-none"
                                         rows={Math.min(
                                             8,
-                                            (selectedTool.command.match(/\n/g) || []).length + 1,
+                                            (selectedTool.configuration.command.match(/\n/g) || []).length + 1,
                                         )}
                                     />
                                 </div>
 
                                 <div>
                                     <Label>Environment Variables</Label>
-                                    {Object.keys(selectedTool.envs).length > 0 ? (
+                                    {Object.keys(selectedTool.configuration.envs).length > 0 ? (
                                         <div className="mt-1 border rounded-md divide-y">
-                                            {Object.entries(selectedTool.envs).map(([key, value]) => (
+                                            {Object.entries(selectedTool.configuration.envs).map(([key, value]) => (
                                                 <div
                                                     key={key}
                                                     className="px-3 py-2 flex justify-between items-center"

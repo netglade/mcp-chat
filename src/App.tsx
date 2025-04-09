@@ -21,7 +21,7 @@ import { useMcpTools } from '@/hooks/useMcpTools.ts'
 // import { DeepPartial } from 'ai'
 // import { usePostHog } from 'posthog-js/react'
 import { generateResponse } from './lib/chat'
-import { McpServer } from '@/types/mcpServer'
+import { McpServerConfiguration } from '@/types/mcpServer'
 import { CoreMessage } from 'ai'
 
 // Assuming you have these types defined somewhere
@@ -69,8 +69,7 @@ export default function App() {
     const [e2bApiKey, setE2bApiKey] = useLocalStorage<string>('e2bApiKey', '')
 
     const {
-        mcpServers,
-        sandboxes,
+        serverClients,
         extendOrRestartServer,
         onAddServerAsync,
         isAddServerPending,
@@ -103,7 +102,7 @@ export default function App() {
 
         try {
             const config = languageModel
-            const mcpServers: McpServer[] = [] // Define or get your MCP servers
+            const mcpServers: McpServerConfiguration[] = [] // Define or get your MCP servers
 
             // Transform messages to CoreMessage[]
             const coreMessages = transformToCoreMessages(messages)
@@ -297,7 +296,7 @@ export default function App() {
                         handleFileChange={handleFileChange}
                     >
                         <ToolSettings
-                            mcpServers={mcpServers}
+                            serverClients={serverClients}
                             onAddServerAsync={onAddServerAsync}
                             isAddServerPending={isAddServerPending}
                             onRemoveServerAsync={onRemoveServerAsync}

@@ -1,9 +1,9 @@
-export interface ToolCallArgument {
+export type ToolCallArgument = {
     name: string
     value: string
 }
 
-export interface ToolCall {
+export type ToolCall = {
     name: string
     arguments: ToolCallArgument[]
     result: string,

@@ -11,7 +11,16 @@ export const TutorialCard = () => {
                         </h1>
                     </AccordionTrigger>
                     <AccordionContent>
-                        Yes. It adheres to the WAI-ARIA design pattern.
+                        1. Add you e2b API key and the API key for your selcted model in LLM Settings.
+                    </AccordionContent>
+                    <AccordionContent>
+                        2. Create an MCP server connection in the Tool Settings (you can add more any time).
+                    </AccordionContent>
+                    <AccordionContent>
+                        3. Wait for the MCP server to load.
+                    </AccordionContent>
+                    <AccordionContent>
+                        4. Chat away!
                     </AccordionContent>
                 </AccordionItem>
             </Accordion>

@@ -41,28 +41,28 @@ export function ToolSettings({
     const [selectedTool, setSelectedTool] = useState<McpServerClient | null>(null)
     const [newToolName, setNewToolName] = useState('')
     const [newToolCommand, setNewToolCommand] = useState('')
-    const [newToolEnvs, setNewToolEnvs] = useState<Record<string, string>>({})
-    const [newEnvKey, setNewEnvKey] = useState('')
-    const [newEnvValue, setNewEnvValue] = useState('')
-
-    const isLoading = false
+    const [newToolEnvs, setNewToolEnvs] = useState<{ key: string, value: string }[]>([])
 
     const handleAddEnv = () => {
-        if (newEnvKey.trim() && newEnvValue.trim()) {
-            setNewToolEnvs((prev) => ({
-                ...prev,
-                [newEnvKey]: newEnvValue,
-            }))
-            setNewEnvKey('')
-            setNewEnvValue('')
-        }
+        setNewToolEnvs((prev) => ([
+            ...prev,
+            { key: '', value: '' },
+        ]))
     }
 
-    const handleRemoveEnv = (key: string) => {
+    const handleRemoveEnv = (index: number) => {
         setNewToolEnvs((prev) => {
-            const updated = { ...prev }
-            delete updated[key]
-            return updated
+            const newEnvs = [...prev]
+            newEnvs.splice(index, 1)
+            return newEnvs
+        })
+    }
+
+    const handleUpdateEnv = (index: number, key: string, value: string) => {
+        setNewToolEnvs((prev) => {
+            const newEnvs = [...prev]
+            newEnvs[index] = { key, value }
+            return newEnvs
         })
     }
 
@@ -75,9 +75,7 @@ export function ToolSettings({
         setSelectedTool(null)
         setNewToolName('')
         setNewToolCommand('')
-        setNewToolEnvs({})
-        setNewEnvKey('')
-        setNewEnvValue('')
+        setNewToolEnvs([{ key: '', value: '' }])
         setIsOpen(true)
     }
 
@@ -93,10 +91,17 @@ export function ToolSettings({
         e.stopPropagation()
 
         if (newToolName.trim() && newToolCommand.trim()) {
+            const envs = {} as Record<string, string>
+            for (const { key, value } of newToolEnvs) {
+                if (key.trim() && value.trim()) {
+                    envs[key] = value
+                }
+            }
+
             await onAddServerAsync({
                 name: newToolName,
                 command: newToolCommand,
-                envs: newToolEnvs,
+                envs,
             })
             setIsOpen(false)
         }
@@ -136,42 +141,36 @@ export function ToolSettings({
                             </Button>
                         </div>
 
-                        {isLoading ? (
-                            <div className="text-xs text-muted-foreground py-1">
-                                Loading tools...
-                            </div>
-                        ) : (
-                            <div className="max-h-40 overflow-y-auto">
-                                {serverClients && serverClients.length > 0 ? (
-                                    <ul className="space-y-1">
-                                        {serverClients.map((client) => (
-                                            <li
-                                                key={client.id}
-                                                className="text-sm py-1 px-1 rounded cursor-pointer hover:bg-accent flex items-center justify-between"
-                                                onClick={() => handleOpenTool(client)}
-                                            >
-                                                <span>{client.configuration.name}</span>
-                                                {client.state === 'loading' ? (
-                                                    <LoaderCircle className="h-3 w-3 animate-spin ml-2" />
-                                                ) : (
-                                                    <div
-                                                        className={`w-2 h-2 rounded-full ml-2 ${
-                                                            client.state === 'running'
-                                                                ? 'bg-green-500'
-                                                                : 'bg-red-500'
-                                                        }`}
-                                                    />
-                                                )}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <div className="text-xs text-muted-foreground py-1">
-                                        No tools available
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                        <div className="max-h-40 overflow-y-auto">
+                            {serverClients && serverClients.length > 0 ? (
+                                <ul className="space-y-1">
+                                    {serverClients.map((client) => (
+                                        <li
+                                            key={client.id}
+                                            className="text-sm py-1 px-1 rounded cursor-pointer hover:bg-accent flex items-center justify-between"
+                                            onClick={() => handleOpenTool(client)}
+                                        >
+                                            <span>{client.configuration.name}</span>
+                                            {client.state === 'loading' ? (
+                                                <LoaderCircle className="h-3 w-3 animate-spin ml-2" />
+                                            ) : (
+                                                <div
+                                                    className={`w-2 h-2 rounded-full ml-2 ${
+                                                        client.state === 'running'
+                                                            ? 'bg-green-500'
+                                                            : 'bg-red-500'
+                                                    }`}
+                                                />
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <div className="text-xs text-muted-foreground py-1">
+                                    No tools available
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu>
@@ -304,55 +303,42 @@ export function ToolSettings({
 
                                     <div>
                                         <Label>Environment Variables</Label>
-                                        {Object.keys(newToolEnvs).length > 0 && (
-                                            <div className="mt-2 mb-3 border rounded-md divide-y">
-                                                {Object.entries(newToolEnvs).map(([key, value]) => (
-                                                    <div
-                                                        key={key}
-                                                        className="px-3 py-2 flex justify-between items-center"
-                                                    >
-                                                        <span className="font-mono text-xs">{key}</span>
-                                                        <div className="flex items-center">
-                                                            <span className="font-mono text-xs mr-2">
-                                                                ••••••
-                                                            </span>
-                                                            <Button
-                                                                type="button"
-                                                                variant="ghost"
-                                                                size="icon"
-                                                                className="h-5 w-5"
-                                                                onClick={() => handleRemoveEnv(key)}
-                                                            >
-                                                                <TrashIcon className="h-3 w-3" />
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
 
-                                        <div className="flex gap-2 mt-2">
-                                            <Input
-                                                placeholder="Key"
-                                                value={newEnvKey}
-                                                onChange={(e) => setNewEnvKey(e.target.value)}
-                                                className="text-xs font-mono"
-                                            />
-                                            <Input
-                                                placeholder="Value"
-                                                value={newEnvValue}
-                                                onChange={(e) => setNewEnvValue(e.target.value)}
-                                                className="text-xs"
-                                                type="password"
-                                            />
+                                        <div className="mt-2 flex flex-col gap-2">
+                                            {newToolEnvs.map(({ key, value }, index) => (
+                                                <div className="flex gap-2">
+                                                    <Input
+                                                        placeholder="Key"
+                                                        value={key}
+                                                        onChange={(e) => handleUpdateEnv(index, e.target.value, value)}
+                                                        className="text-xs font-mono"
+                                                    />
+                                                    <Input
+                                                        placeholder="Value"
+                                                        value={value}
+                                                        onChange={(e) => handleUpdateEnv(index, key, e.target.value)}
+                                                        className="text-xs"
+                                                        type="password"
+                                                    />
+                                                    <Button
+                                                        type="button"
+                                                        size="icon"
+                                                        onClick={() => handleRemoveEnv(index)}
+                                                        className="shrink-0"
+                                                    >
+                                                        <TrashIcon className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="mt-2">
                                             <Button
                                                 type="button"
-                                                size="icon"
                                                 onClick={handleAddEnv}
-                                                disabled={!newEnvKey.trim() || !newEnvValue.trim()}
-                                                className="shrink-0"
                                             >
                                                 <PlusIcon className="h-4 w-4" />
+                                                Add Variable
                                             </Button>
                                         </div>
                                     </div>
@@ -373,7 +359,8 @@ export function ToolSettings({
                                         }
                                     >
                                         {!isAddServerPending && <PlusIcon className="h-4 w-4 mr-2" />}
-                                        <Spinner size="small" show={isAddServerPending} className="text-primary-foreground mr-2" />
+                                        <Spinner size="small" show={isAddServerPending}
+                                                 className="text-primary-foreground mr-2" />
                                         Create Tool
                                     </Button>
                                 </DialogFooter>

@@ -2,10 +2,12 @@ import { Button } from '@/components/ui/Button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/Tooltip'
 import { ArrowUp } from 'lucide-react'
 import TextareaAutosize from 'react-textarea-autosize'
+import { Spinner } from '@/components/ui/Spinner.tsx'
 
 export function ChatInput({
     retry,
     isErrored,
+    isLoading = true,
     input,
     handleInputChange,
     handleSubmit,
@@ -13,6 +15,7 @@ export function ChatInput({
 }: {
     retry: () => void
     isErrored: boolean
+    isLoading: boolean
     input: string
     handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -70,13 +73,13 @@ export function ChatInput({
                                 <Tooltip delayDuration={0}>
                                     <TooltipTrigger asChild>
                                         <Button
-                                            disabled={isErrored}
+                                            disabled={isErrored || isLoading}
                                             variant="default"
                                             size="icon"
                                             type="submit"
                                             className="rounded-xl h-10 w-10"
                                         >
-                                            <ArrowUp className="h-5 w-5" />
+                                            {isLoading ? <Spinner className="h-7 w-7 text-primary-foreground" /> : <ArrowUp className="h-5 w-5" />}
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>Send message</TooltipContent>

@@ -27,6 +27,7 @@ export default function App() {
 
     const {
         serverClients,
+        isClientsLoading,
         extendOrRestartServer,
         onAddServerAsync,
         isAddServerPending,
@@ -70,6 +71,10 @@ export default function App() {
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        if (isClientsLoading) {
+            return
+        }
+
         e.preventDefault()
 
         const content: Message['content'] = [{ type: 'text', text: chatInput }]
@@ -87,6 +92,10 @@ export default function App() {
     }
 
     function retry() {
+        if (isClientsLoading) {
+            return
+        }
+
         submit({
             messages,
         })
@@ -127,6 +136,7 @@ export default function App() {
                     <ChatInput
                         retry={retry}
                         isErrored={error !== undefined}
+                        isLoading={isClientsLoading || isGenerateResponsePending}
                         input={chatInput}
                         handleInputChange={handleSaveInputChange}
                         handleSubmit={handleSubmit}

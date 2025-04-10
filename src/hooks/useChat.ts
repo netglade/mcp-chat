@@ -24,11 +24,12 @@ export const useChat = ({
     }: {
         messages: Message[]
     }) => {
-        const extendPromises = clients.map(extendOrRestartServer)
+        const runningClients = clients.filter((client) => client.state === 'running')
+        const extendPromises = runningClients.map(extendOrRestartServer)
         await Promise.all(extendPromises)
 
         let tools = {}
-        for (const client of clients) {
+        for (const client of runningClients) {
             tools = { ...tools, ...client.tools }
         }
 

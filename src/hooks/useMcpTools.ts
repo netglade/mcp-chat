@@ -20,6 +20,7 @@ export const useMcpTools = ({
         configuration,
         state: 'loading',
     })))
+    const isClientsLoading = serverClients.some((c) => c.state === 'loading')
 
     useEffect(() => {
         for (const serverConfiguration of serverConfigurations) {
@@ -189,6 +190,7 @@ export const useMcpTools = ({
 
     return {
         serverClients,
+        isClientsLoading,
         extendOrRestartServer,
         onAddServerAsync,
         isAddServerPending,

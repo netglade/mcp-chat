@@ -11,6 +11,7 @@ import { ModelPicker } from '@/components/ModelPicker'
 import { ApiKeySettings } from '@/components/ApiKeySettings.tsx'
 import { useMcpTools } from '@/hooks/useMcpTools.ts'
 import { useChat } from '@/hooks/useChat.ts'
+import { TutorialCard } from '@/components/TutorialCard.tsx'
 
 export default function App() {
     const [messages, setMessages] = useState<Message[]>([])
@@ -121,9 +122,10 @@ export default function App() {
 
     return (
         <main className="flex min-h-screen max-h-screen">
-            <div className="grid w-full md:grid-cols-2">
+            <div className="grid w-full md:grid-cols-2 relative">
+                <TutorialCard />
                 <div
-                    className={`flex flex-col w-full max-h-full max-w-[800px] mx-auto px-4 overflow-auto col-span-2`}
+                    className={`flex flex-col w-full max-h-full max-w-[640px] 2xl:max-w-[800px] mx-auto px-4 overflow-auto col-span-2`}
                 >
                     <NavBar
                         onClear={handleClearChat}

@@ -93,7 +93,13 @@ export const useMcpTools = ({
     async function extendOrRestartServer(client: McpServerClient): Promise<void> {
         // Check if server is running
         if (client.sandbox) {
-            const isRunning = await client.sandbox.sandbox.isRunning()
+            let isRunning = false
+            try {
+                isRunning = await client.sandbox.sandbox.isRunning()
+            } catch (error) {
+                console.error(`Error while checking state of server ${client.configuration.name}:`, error)
+            }
+
             if (isRunning) {
                 // Extend timeout if server is running
                 await client.sandbox.sandbox.setTimeout(300_000)

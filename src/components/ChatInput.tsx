@@ -5,7 +5,6 @@ import TextareaAutosize from 'react-textarea-autosize'
 import { Spinner } from '@/components/ui/Spinner.tsx'
 
 export function ChatInput({
-    retry,
     isErrored,
     isLoading = true,
     input,
@@ -13,7 +12,6 @@ export function ChatInput({
     handleSubmit,
     children,
 }: {
-    retry: () => void
     isErrored: boolean
     isLoading: boolean
     input: string
@@ -38,37 +36,21 @@ export function ChatInput({
             onKeyDown={onEnter}
             className="mb-2 mt-auto flex flex-col bg-background"
         >
-            {isErrored && (
-                <div
-                    className={`flex items-center p-1.5 text-sm font-medium mx-4 mb-10 rounded-xl bg-red-400/10 text-red-400`}
-                >
-                    <span className="flex-1 px-1.5">
-                        An unexpected error has occurred.
-                    </span>
-                    <button
-                        className={`px-2 py-1 rounded-sm bg-red-400/20`}
-                        onClick={retry}
-                    >
-                        Try again
-                    </button>
-                </div>
-            )}
             <div className="relative">
                 <div className="shadow-md rounded-2xl relative z-10 bg-background border">
                     <div className="flex items-center px-3 py-2 gap-1">{children}</div>
-                    <div className="relative px-4 pb-2">
+                    <div className="relative px-3 py-2">
                         <TextareaAutosize
                             autoFocus={true}
                             minRows={1}
                             maxRows={5}
                             className="text-normal resize-none ring-0 bg-inherit w-full m-0 outline-none pr-12"
                             required={true}
-                            placeholder="Chat with your tools..."
-                            disabled={isErrored}
+                            placeholder="Chat with your MCP tools..."
                             value={input}
                             onChange={handleInputChange}
                         />
-                        <div className="absolute right-3 bottom-3">
+                        <div className="absolute right-3 bottom-2">
                             <TooltipProvider>
                                 <Tooltip delayDuration={0}>
                                     <TooltipTrigger asChild>
@@ -93,7 +75,7 @@ export function ChatInput({
                 </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-                Assistant uses the MCP protocol to connect to tools
+                Assistant uses MCP to connect to MCP tools
             </p>
         </form>
     )

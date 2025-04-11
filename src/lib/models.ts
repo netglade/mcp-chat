@@ -8,7 +8,7 @@ export function getModelClient(model: LLMModel, config: LLMModelConfig) {
 
     const providerConfigs = {
         anthropic: () => createAnthropic({ apiKey, baseURL })(modelNameString),
-        openai: () => createOpenAI({ apiKey, baseURL })(modelNameString),
+        openai: () => createOpenAI({ apiKey, baseURL })(modelNameString, {structuredOutputs: false}), //INFO: Workaround for https://github.com/vercel/ai/issues/4662
     }
 
     const createClient =

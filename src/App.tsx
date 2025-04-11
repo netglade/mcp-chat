@@ -12,11 +12,12 @@ import { ApiKeySettings } from '@/components/ApiKeySettings.tsx'
 import { useMcpTools } from '@/hooks/useMcpTools.ts'
 import { useChat } from '@/hooks/useChat.ts'
 import { TutorialCard } from '@/components/TutorialCard.tsx'
+import { ErrorMessage } from '@/components/ErrorMessage.tsx'
 
 export default function App() {
     const [messages, setMessages] = useState<Message[]>([])
     const [chatInput, setChatInput] = useLocalStorage('chat', '')
-    const [error, setError] = useState(undefined)
+    const [error, setError] = useState<string | undefined>(undefined)
 
     const [languageModelConfiguration, setLanguageModelConfiguration] = useLocalStorage<LLMModelConfig>(
         'languageModel',
@@ -48,27 +49,19 @@ export default function App() {
         setError(undefined)
 
         try {
-            try {
-                const response = await generateResponseAsync({ messages })
-                addMessage({
-                    role: 'assistant',
-                    toolCalls: response.toolCalls,
-                    content: [{ type: 'text', text: response.text ?? '' }],
-                })
-            } catch (error) {
-                console.error(`Error generating response:`, error)
-                addMessage({
-                    role: 'assistant',
-                    content: [{ type: 'text', text: 'Ups, something went wrong...' }],
-                })
-            }
-        } catch (err: any) {
-            if (err.name === 'AbortError') {
-                console.log('Fetch operation was aborted')
-            } else {
-                console.error('Error submitting form:', err)
-                setError(err.message || 'An error occurred while submitting the form')
-            }
+            const response = await generateResponseAsync({ messages })
+            addMessage({
+                role: 'assistant',
+                toolCalls: response.toolCalls,
+                content: [{ type: 'text', text: response.text ?? '' }],
+            })
+        } catch (err: unknown) {
+            console.error(`Error generating response:`, err)
+            setError(err instanceof Error ? err.message : 'An error occurred while generating response')
+            addMessage({
+                role: 'assistant',
+                content: [{ type: 'text', text: 'Ups, something went wrong...' }],
+            })
         }
     }
 
@@ -132,12 +125,19 @@ export default function App() {
                         onClear={handleClearChat}
                         canClear={messages.length > 0}
                     />
+                    {error && (
+                        <ErrorMessage
+                            title="Error"
+                            message={typeof error === 'string' ? error : 'An error occurred'}
+                            onRetry={retry}
+                            onDismiss={() => setError(undefined)}
+                        />
+                    )}
                     <Chat
                         messages={messages}
                         isLoading={isGenerateResponsePending}
                     />
                     <ChatInput
-                        retry={retry}
                         isErrored={error !== undefined}
                         isLoading={isClientsLoading || isGenerateResponsePending}
                         input={chatInput}

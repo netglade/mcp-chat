@@ -17,7 +17,7 @@ export const TutorialCard = () => {
                             {/* Setup Guide */}
                             <ol className="list-decimal pl-5 space-y-4 pt-2">
                                 <li>Click the settings icon <Settings2 className="h-4 w-4 inline text-muted-foreground" /> to add your E2B API key and model API key</li>
-                                <li>Click the tools icon <HammerIcon className="h-4 w-4 inline text-muted-foreground" /> to create a new MCP server connection</li>
+                                <li>Click the tools icon <HammerIcon className="h-4 w-4 inline text-muted-foreground" /> to add a new MCP server connection</li>
                                 <li>When you see <LoaderCircle className="h-4 w-4 inline text-muted-foreground animate-spin" />, wait for the server to load</li>
                                 <li>Start chatting in the message box below!</li>
                             </ol>
@@ -29,12 +29,14 @@ export const TutorialCard = () => {
                                 </h2>
                                 <div className="space-y-2">
                                     <a href="https://github.com/modelcontextprotocol/servers"
-                                       className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-500 hover:underline">
+                                        target="_blank"
+                                        className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-500 hover:underline">
                                         <ExternalLink className="h-3 w-3" />
                                         Blog post about MCP Chat
                                     </a>
-                                    <a href="https://github.com/modelcontextprotocol/servers"
-                                       className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-500 hover:underline">
+                                    <a href="https://github.com/topics/mcp-server"
+                                        target="_blank"
+                                        className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-500 hover:underline">
                                         <ExternalLink className="h-3 w-3" />
                                         Discover MCP Servers on GitHub
                                     </a>

@@ -14,7 +14,7 @@ import { Input } from './ui/Input'
 import { Label } from './ui/Label'
 import { Textarea } from './ui/Textarea'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/Tooltip'
-import { LoaderCircle, PlusIcon, TrashIcon, Settings2, Terminal, HammerIcon } from 'lucide-react'
+import { LoaderCircle, PlusIcon, TrashIcon, Settings2, Terminal, HammerIcon, ExternalLink } from 'lucide-react'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner.tsx'
 import presetsList from '@/lib/presets.json'
@@ -133,15 +133,15 @@ export function ToolSettings({
                                 </Button>
                             </DropdownMenuTrigger>
                         </TooltipTrigger>
-                        <TooltipContent>Configure Tools</TooltipContent>
+                        <TooltipContent>Configure MCP Tools</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
                 <DropdownMenuContent align="start" className="w-72">
                     <div className="flex flex-col gap-4 p-4">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h4 className="font-medium mb-1">Tools</h4>
-                                <p className="text-xs text-muted-foreground">Manage your MCP-compatible tools</p>
+                                <h4 className="font-medium mb-1">MCP Tools</h4>
+                                <p className="text-xs text-muted-foreground">Manage your MCP tools</p>
                             </div>
                             <Button
                                 variant="outline"
@@ -150,7 +150,7 @@ export function ToolSettings({
                                 onClick={handleCreateNew}
                             >
                                 <PlusIcon className="h-4 w-4" />
-                                Add Tool
+                                Add MCP
                             </Button>
                         </div>
 
@@ -192,8 +192,8 @@ export function ToolSettings({
                                 <div className="flex flex-col items-center justify-center gap-2 p-8 text-center">
                                     <Settings2 className="h-8 w-8 text-muted-foreground" />
                                     <div>
-                                        <p className="text-sm font-medium">No tools configured</p>
-                                        <p className="text-xs text-muted-foreground">Add a tool to get started</p>
+                                        <p className="text-sm font-medium">No MCP tools configured</p>
+                                        <p className="text-xs text-muted-foreground">Add an MCP tool to get started</p>
                                     </div>
                                 </div>
                             )}
@@ -213,7 +213,7 @@ export function ToolSettings({
                                     <Terminal className="h-5 w-5" />
                                     {selectedTool.configuration.name}
                                 </DialogTitle>
-                                <DialogDescription>View and manage tool configuration</DialogDescription>
+                                <DialogDescription>View and manage MCP tool configuration</DialogDescription>
                             </DialogHeader>
 
                             <div className="space-y-6 py-4">
@@ -250,7 +250,7 @@ export function ToolSettings({
                                     ) : (
                                         <>
                                             <TrashIcon className="h-4 w-4 mr-2" />
-                                            Remove Tool
+                                            Remove MCP
                                         </>
                                     )}
                                 </Button>
@@ -260,15 +260,19 @@ export function ToolSettings({
                         // Add New Tool Dialog
                         <>
                             <DialogHeader>
-                                <DialogTitle className="flex items-center gap-2">
-                                    <Terminal className="h-5 w-5" />
-                                    Add New Tool
-                                </DialogTitle>
-                                <DialogDescription>Configure a new MCP-compatible tool</DialogDescription>
+                                <DialogTitle className="text-xl">Add New MCP Tool</DialogTitle>
+                                <DialogDescription>
+                                    Add any existing <a href="https://github.com/modelcontextprotocol/servers"
+                                        target="_blank"
+                                        className="inline-flex items-center gap-1 pl-1 text-sm text-blue-600 dark:text-blue-500 hover:underline">
+                                        <ExternalLink className="h-3 w-3" />
+                                        MCP server.
+                                    </a>
+                                </DialogDescription>
                             </DialogHeader>
 
                             <form onSubmit={handleAddTool} className="space-y-4">
-                                <div className="space-y-4 py-4">
+                                <div className="space-y-4 pb-4">
                                     {/* Quick Start Section */}
                                     <div className="flex items-center gap-3 text-sm">
                                         <span className="flex items-center gap-1.5 shrink-0">
@@ -306,12 +310,12 @@ export function ToolSettings({
 
                                         <div>
                                             <Label htmlFor="command" className="text-sm font-medium">Command</Label>
-                                            <p className="text-xs text-muted-foreground mb-2">The command to start your tool</p>
+                                            <p className="text-xs text-muted-foreground mb-2">The command to start the MCP server</p>
                                             <Textarea
                                                 id="command"
                                                 value={newToolCommand}
                                                 onChange={(e) => setNewToolCommand(e.target.value)}
-                                                placeholder="e.g., python -i"
+                                                placeholder="e.g., npx -y @modelcontextprotocol/..."
                                                 className="font-mono text-sm min-h-[80px]"
                                                 required
                                             />
@@ -323,7 +327,7 @@ export function ToolSettings({
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <Label className="text-sm font-medium">Environment Variables</Label>
-                                                <p className="text-xs text-muted-foreground">Add environment variables for your tool</p>
+                                                <p className="text-xs text-muted-foreground">Add environment variables for the MCP server</p>
                                             </div>
                                             <Button
                                                 type="button"
@@ -382,7 +386,7 @@ export function ToolSettings({
                                         ) : (
                                             <Terminal className="h-4 w-4 mr-2" />
                                         )}
-                                        Add Tool
+                                        Add MCP Tool
                                     </Button>
                                 </DialogFooter>
                             </form>

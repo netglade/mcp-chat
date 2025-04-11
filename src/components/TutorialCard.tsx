@@ -1,5 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/Accordion.tsx'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, ShieldCheck } from 'lucide-react'
 import { Settings2, HammerIcon, LoaderCircle } from 'lucide-react'
 
 export const TutorialCard = () => {
@@ -44,8 +44,26 @@ export const TutorialCard = () => {
                             </div>
 
                             {/* Privacy Notice */}
-                            <div className="text-xs text-muted-foreground italic border-t pt-4">
-                                We do not store any of your data. Your API keys are sent directly from your browser to E2B servers.
+                            <div className="space-y-3">
+                                <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+                                    <ShieldCheck className="h-4 w-4 text-green-600 dark:text-green-500" />
+                                    Privacy & Security
+                                </h2>
+                                <div className="rounded-md bg-muted/50 p-3">
+                                    <div className="space-y-2 text-xs text-muted-foreground">
+                                        <p>
+                                            This is a client-side application - all sensitive data is stored in your browser's local storage:
+                                        </p>
+                                        <ul className="list-disc pl-4 space-y-1">
+                                            <li>API keys are only sent directly to their respective services (E2B, model providers)</li>
+                                            <li>MCP configurations and environment variables are only sent to E2B sandbox</li>
+                                            <li>We do not store or transmit any of your data to our servers</li>
+                                        </ul>
+                                        <p className="italic">
+                                            You can verify this yourself using browser Developer Tools (Network tab).
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </AccordionContent>

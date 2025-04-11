@@ -1,4 +1,4 @@
-import { LoaderIcon } from 'lucide-react'
+import { LoaderIcon, HammerIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Message } from '@/types/message'
 import ReactMarkdown from 'react-markdown'
@@ -59,7 +59,10 @@ export function Chat({
                                                     className="flex items-center justify-between px-3 py-2 bg-zinc-700/50 cursor-pointer hover:bg-zinc-700/70 transition-colors"
                                                     onClick={() => toggleExpand(toolCall.id)}
                                                 >
-                                                    <span className="text-sm font-medium">{toolCall.name}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <HammerIcon className="h-4 w-4 text-amber-500" />
+                                                        <span className="text-sm font-medium">{toolCall.name}</span>
+                                                    </div>
                                                     <span className="text-xs text-zinc-400">
                                                         {expandedCalls[toolCall.id] ? '▲' : '▼'}
                                                     </span>

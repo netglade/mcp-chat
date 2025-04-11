@@ -143,6 +143,7 @@ export default function App() {
                         input={chatInput}
                         handleInputChange={handleSaveInputChange}
                         handleSubmit={handleSubmit}
+                        serverClients={serverClients}
                     >
                         <ToolSettings
                             serverClients={serverClients}
@@ -151,14 +152,14 @@ export default function App() {
                             onRemoveServerAsync={onRemoveServerAsync}
                             isRemoveServerPending={isRemoveServerPending}
                         />
-                        <ModelPicker
-                            models={modelsList.models}
-                            languageModel={languageModelConfiguration}
-                            onLanguageModelChange={handleLanguageModelChange}
-                        />
                         <ApiKeySettings
                             e2bApiKey={e2bApiKey}
                             onE2bApiKeyChange={setE2bApiKey}
+                            languageModel={languageModelConfiguration}
+                            onLanguageModelChange={handleLanguageModelChange}
+                        />
+                        <ModelPicker
+                            models={modelsList.models}
                             languageModel={languageModelConfiguration}
                             onLanguageModelChange={handleLanguageModelChange}
                         />

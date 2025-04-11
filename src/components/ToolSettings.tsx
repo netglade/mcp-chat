@@ -44,6 +44,10 @@ export function ToolSettings({
     const [newToolCommand, setNewToolCommand] = useState('')
     const [newToolEnvs, setNewToolEnvs] = useState<{ key: string, value: string }[]>([])
 
+    // Determine the overall status of tools
+    const hasErroredTools = serverClients.some(client => client.state === 'error')
+    const activeToolsCount = serverClients.filter(client => client.state === 'running').length
+
     const handleAddEnv = () => {
         setNewToolEnvs((prev) => ([
             ...prev,
@@ -124,16 +128,21 @@ export function ToolSettings({
                     <Tooltip delayDuration={0}>
                         <TooltipTrigger asChild>
                             <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-muted-foreground hover:text-foreground hover:bg-accent h-6 w-6 rounded-sm transition-colors"
-                                >
+                                <Button variant="ghost" size="icon"
+                                    className="text-muted-foreground hover:text-foreground hover:bg-accent h-6 w-6 rounded-sm transition-colors relative">
                                     <HammerIcon className="h-4 w-4" />
+                                    {hasErroredTools && (
+                                        <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full" />
+                                    )}
+                                    {activeToolsCount > 0 && (
+                                        <span className="absolute -bottom-1 -right-1 flex items-center justify-center min-w-[14px] h-[14px] text-[10px] font-medium bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-full px-[2px]">
+                                            {activeToolsCount}
+                                        </span>
+                                    )}
                                 </Button>
                             </DropdownMenuTrigger>
                         </TooltipTrigger>
-                        <TooltipContent>Configure MCP Tools</TooltipContent>
+                        <TooltipContent>MCP Tools</TooltipContent>
                     </Tooltip>
                 </TooltipProvider>
                 <DropdownMenuContent align="start" className="w-72">

@@ -18,9 +18,9 @@ export const useMcpTools = ({
     const [serverClients, setServerClients] = useState<McpServerClient[]>(serverConfigurations.map((configuration) => ({
         id: configuration.id,
         configuration,
-        state: 'loading',
+        state: 'starting',
     })))
-    const isClientsLoading = serverClients.some((c) => c.state === 'loading')
+    const isClientsLoading = serverClients.some((c) => c.state === 'starting')
 
     useEffect(() => {
         for (const serverConfiguration of serverConfigurations) {
@@ -36,7 +36,7 @@ export const useMcpTools = ({
             setServerClients(produce((draft) => {
                 const client = draft.find((c) => c.id === serverConfiguration.id)
                 if (client) {
-                    client.state = 'loading'
+                    client.state = 'starting'
                 }
             }))
 
@@ -170,7 +170,7 @@ export const useMcpTools = ({
             draft.push({
                 id: configuration.id,
                 configuration,
-                state: 'loading',
+                state: 'starting',
             })
         }))
         startServer(configuration)

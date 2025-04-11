@@ -3,13 +3,16 @@ import { useEffect, useState } from 'react'
 import { Message } from '@/types/message'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { EmptyState } from '@/components/EmptyState'
 
 export function Chat({
     messages,
     isLoading,
+    onExampleClick,
 }: {
     messages: Message[]
     isLoading: boolean
+    onExampleClick?: (query: string) => void
 }) {
     const [expandedCalls, setExpandedCalls] = useState(
         {} as Record<string, boolean>,
@@ -28,6 +31,10 @@ export function Chat({
             chatContainer.scrollTop = chatContainer.scrollHeight
         }
     }, [JSON.stringify(messages)])
+
+    if (messages.length === 0 && !isLoading && onExampleClick) {
+        return <EmptyState onExampleClick={onExampleClick} />
+    }
 
     return (
         <div
@@ -53,29 +60,29 @@ export function Chat({
                                         {message.toolCalls.map((toolCall) => (
                                             <div 
                                                 key={toolCall.id} 
-                                                className="border border-zinc-200/10 rounded-lg overflow-hidden"
+                                                className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden"
                                             >
                                                 <div
-                                                    className="flex items-center justify-between px-3 py-2 bg-zinc-700/50 cursor-pointer hover:bg-zinc-700/70 transition-colors"
+                                                    className="flex items-center justify-between px-3 py-2 bg-zinc-100 dark:bg-zinc-700/50 cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-700/70 transition-colors"
                                                     onClick={() => toggleExpand(toolCall.id)}
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <HammerIcon className="h-4 w-4 text-amber-500" />
                                                         <span className="text-sm font-medium">{toolCall.name}</span>
                                                     </div>
-                                                    <span className="text-xs text-zinc-400">
+                                                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
                                                         {expandedCalls[toolCall.id] ? '▲' : '▼'}
                                                     </span>
                                                 </div>
 
                                                 {expandedCalls[toolCall.id] && (
-                                                    <div className="px-3 py-2 text-sm bg-zinc-800/50">
+                                                    <div className="px-3 py-2 text-sm bg-zinc-50 dark:bg-zinc-800/50">
                                                         {toolCall.arguments.map((argument) => (
                                                             <div key={argument.name} className="flex py-0.5">
-                                                                <span className="text-zinc-400 mr-2 font-mono text-xs">
+                                                                <span className="text-zinc-500 dark:text-zinc-400 mr-2 font-mono text-xs">
                                                                     {argument.name}:
                                                                 </span>
-                                                                <span className="text-zinc-300 font-mono text-xs">
+                                                                <span className="text-zinc-700 dark:text-zinc-300 font-mono text-xs">
                                                                     {argument.value}
                                                                 </span>
                                                             </div>
@@ -114,10 +121,9 @@ export function Chat({
                     </div>
                 ))}
                 {isLoading && (
-                    <div className="flex justify-start">
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground bg-white/50 dark:bg-zinc-800/50 py-2 px-4 rounded-2xl border border-zinc-200/10">
-                            <LoaderIcon strokeWidth={2} className="animate-spin w-4 h-4" />
-                            <span>Generating...</span>
+                    <div className="flex justify-start pt-2">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span>AI is thinking...</span>
                         </div>
                     </div>
                 )}

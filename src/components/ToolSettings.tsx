@@ -183,7 +183,7 @@ export function ToolSettings({
                                                     </p>
                                                 </div>
                                             </div>
-                                            {client.state === 'loading' ? (
+                                            {client.state === 'starting' ? (
                                                 <LoaderCircle className="h-4 w-4 animate-spin text-muted-foreground" />
                                             ) : (
                                                 <div

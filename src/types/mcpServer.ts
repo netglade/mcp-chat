@@ -1,7 +1,7 @@
 import { McpSandbox } from '@netglade/mcp-sandbox'
 import { experimental_createMCPClient } from 'ai'
 
-export type McpServerState = 'loading' | 'running' | 'error'
+export type McpServerState = 'starting' | 'running' | 'error'
 
 export type McpServerConfiguration = {
     name: string

@@ -8,7 +8,7 @@ export function Footer({
 }) {
     // Count servers by state
     const runningServers = serverClients.filter(client => client.state === 'running').length
-    const loadingServers = serverClients.filter(client => client.state === 'loading').length
+    const startingServers = serverClients.filter(client => client.state === 'starting').length
     const erroredServers = serverClients.filter(client => client.state === 'error').length
     
     // Determine connection status
@@ -18,9 +18,9 @@ export function Footer({
     if (serverClients.length === 0) {
         statusIcon = <CircleDot className="h-3 w-3 text-zinc-400" />
         statusText = "No MCP servers"
-    } else if (loadingServers > 0) {
+    } else if (startingServers > 0) {
         statusIcon = <LoaderCircle className="h-3 w-3 text-amber-500 animate-spin" />
-        statusText = "Loading MCP servers..."
+        statusText = "Starting MCP servers..."
     } else if (erroredServers === serverClients.length) {
         statusIcon = <AlertCircle className="h-3 w-3 text-red-500" />
         statusText = "MCP server error"

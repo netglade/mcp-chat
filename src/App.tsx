@@ -113,6 +113,11 @@ export default function App() {
     function handleClearChat() {
         setChatInput('')
         setMessages([])
+        setError(undefined)
+    }
+
+    function handleExampleClick(query: string) {
+        setChatInput(query)
     }
 
     return (
@@ -122,7 +127,7 @@ export default function App() {
                 <div
                     className={`flex flex-col w-full max-h-full max-w-[640px] 2xl:max-w-[800px] mx-auto px-4 overflow-auto col-span-2`}
                 >
-                    <NavBar
+                    <NavBar 
                         onClear={handleClearChat}
                         canClear={messages.length > 0}
                     />
@@ -137,6 +142,7 @@ export default function App() {
                     <Chat
                         messages={messages}
                         isLoading={isGenerateResponsePending}
+                        onExampleClick={handleExampleClick}
                     />
                     <ChatInput
                         isErrored={error !== undefined}

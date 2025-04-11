@@ -18,7 +18,7 @@ export const TutorialCard = () => {
                             <ol className="list-decimal pl-5 space-y-4 pt-2">
                                 <li>Click the settings icon <Settings2 className="h-4 w-4 inline text-muted-foreground" /> to add your E2B API key and model API key</li>
                                 <li>Click the tools icon <HammerIcon className="h-4 w-4 inline text-muted-foreground" /> to add a new MCP server connection</li>
-                                <li>When you see <LoaderCircle className="h-4 w-4 inline text-muted-foreground animate-spin" />, wait for the server to load</li>
+                                <li>When you see <LoaderCircle className="h-4 w-4 inline text-muted-foreground animate-spin" />, wait for the server to start</li>
                                 <li>Start chatting in the message box below!</li>
                             </ol>
 

@@ -55,7 +55,8 @@ export default function App() {
                     toolCalls: response.toolCalls,
                     content: [{ type: 'text', text: response.text ?? '' }],
                 })
-            } catch {
+            } catch (error) {
+                console.error(`Error generating response:`, error)
                 addMessage({
                     role: 'assistant',
                     content: [{ type: 'text', text: 'Ups, something went wrong...' }],

@@ -17,6 +17,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/T
 import { HammerIcon, LoaderCircle, PlusIcon, TrashIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner.tsx'
+import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/Select.tsx'
+import presetsList from '@/lib/presets.json'
 
 type ToolSettingsProps = {
     serverClients: McpServerClient[]
@@ -105,6 +107,15 @@ export function ToolSettings({
             })
             setIsOpen(false)
         }
+    }
+
+    const handleSetPreset = (indexString: string) => {
+        const index = parseInt(indexString, 10)
+        const preset = presetsList.presets[index]
+
+        setNewToolName(preset.name)
+        setNewToolCommand(preset.command)
+        setNewToolEnvs(Object.entries(preset.envs).map(([key, value]) => ({ key, value })))
     }
 
     return (
@@ -273,6 +284,20 @@ export function ToolSettings({
 
                             <form onSubmit={handleAddTool}>
                                 <div className="space-y-4 py-4">
+                                    <div>
+                                        <Label htmlFor="preset">💡 Preset</Label>
+                                        <Select value="unset" onValueChange={handleSetPreset}>
+                                            <SelectTrigger className="mt-1">
+                                                Choose a preset
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {presetsList.presets.map((preset, index) => (
+                                                    <SelectItem value={index.toString()} className="cursor-pointer">{preset.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
                                     <div>
                                         <Label htmlFor="toolName">Tool Name</Label>
                                         <Input

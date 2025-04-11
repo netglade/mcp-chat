@@ -1,0 +1,30 @@
+{
+  "presets": [
+    {
+      "name": "Brave Search",
+      "command": "npx -y @modelcontextprotocol/server-brave-search",
+      "envs": {
+        "BRAVE_API_KEY": ""
+      }
+    },
+    {
+      "name": "E2B Code Interpreter",
+      "command": "npx -y @e2b/mcp-server",
+      "envs": {
+        "E2B_API_KEY": ""
+      }
+    },
+    {
+      "name": "GitHub",
+      "command": "npx -y @modelcontextprotocol/server-github",
+      "envs": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      }
+    },
+    {
+      "name": "PostgreSQL",
+      "command": "npx -y @modelcontextprotocol/server-postgres postgresql://localhost/mydb",
+      "envs": {}
+    }
+  ]
+}

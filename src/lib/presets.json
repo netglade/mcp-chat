@@ -8,7 +8,7 @@
       }
     },
     {
-      "name": "E2B Code Interpreter",
+      "name": "E2B Interpreter",
       "command": "npx -y @e2b/mcp-server",
       "envs": {
         "E2B_API_KEY": ""

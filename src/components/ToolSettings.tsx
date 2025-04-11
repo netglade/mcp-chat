@@ -17,7 +17,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/T
 import { LoaderCircle, PlusIcon, TrashIcon, Settings2, Terminal, HammerIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Spinner } from '@/components/ui/Spinner.tsx'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select.tsx'
 import presetsList from '@/lib/presets.json'
 
 type ToolSettingsProps = {
@@ -77,7 +76,7 @@ export function ToolSettings({
         setSelectedTool(null)
         setNewToolName('')
         setNewToolCommand('')
-        setNewToolEnvs([{ key: '', value: '' }])
+        setNewToolEnvs([])
         setIsOpen(true)
     }
 
@@ -261,90 +260,109 @@ export function ToolSettings({
                         // Add New Tool Dialog
                         <>
                             <DialogHeader>
-                                <DialogTitle>Add New Tool</DialogTitle>
+                                <DialogTitle className="flex items-center gap-2">
+                                    <Terminal className="h-5 w-5" />
+                                    Add New Tool
+                                </DialogTitle>
                                 <DialogDescription>Configure a new MCP-compatible tool</DialogDescription>
                             </DialogHeader>
 
-                            <form onSubmit={handleAddTool} className="space-y-6 py-4">
-                                <div className="space-y-4">
-                                    <div>
-                                        <Label className="mb-2 block">Preset Configuration</Label>
-                                        <Select onValueChange={handleSetPreset}>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select a preset..." />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {presetsList.presets.map((preset, index) => (
-                                                    <SelectItem key={index} value={index.toString()}>
-                                                        {preset.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                            <form onSubmit={handleAddTool} className="space-y-4">
+                                <div className="space-y-4 py-4">
+                                    {/* Quick Start Section */}
+                                    <div className="flex items-center gap-3 text-sm">
+                                        <span className="flex items-center gap-1.5 shrink-0">
+                                            <span>💡</span>
+                                            <span>Quick Start:</span>
+                                        </span>
+                                        <div className="flex items-center gap-3">
+                                            {presetsList.presets.map((preset, index) => (
+                                                <button
+                                                    key={index}
+                                                    type="button"
+                                                    onClick={() => handleSetPreset(index.toString())}
+                                                    className="text-blue-600 dark:text-blue-500 hover:underline whitespace-nowrap"
+                                                >
+                                                    {preset.name}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <Label htmlFor="name">Tool Name</Label>
-                                        <Input
-                                            id="name"
-                                            value={newToolName}
-                                            onChange={(e) => setNewToolName(e.target.value)}
-                                            placeholder="Enter tool name..."
-                                            required
-                                        />
+                                    {/* Basic Configuration */}
+                                    <div className="space-y-4">
+                                        <div>
+                                            <Label htmlFor="name" className="text-sm font-medium">Tool Name</Label>
+                                            <p className="text-xs text-muted-foreground mb-2">A descriptive name for your tool</p>
+                                            <Input
+                                                id="name"
+                                                value={newToolName}
+                                                onChange={(e) => setNewToolName(e.target.value)}
+                                                placeholder="e.g., Python REPL, Node.js Server..."
+                                                className="font-medium"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <Label htmlFor="command" className="text-sm font-medium">Command</Label>
+                                            <p className="text-xs text-muted-foreground mb-2">The command to start your tool</p>
+                                            <Textarea
+                                                id="command"
+                                                value={newToolCommand}
+                                                onChange={(e) => setNewToolCommand(e.target.value)}
+                                                placeholder="e.g., python -i"
+                                                className="font-mono text-sm min-h-[80px]"
+                                                required
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className="space-y-2">
-                                        <Label htmlFor="command">Command</Label>
-                                        <Textarea
-                                            id="command"
-                                            value={newToolCommand}
-                                            onChange={(e) => setNewToolCommand(e.target.value)}
-                                            placeholder="Enter command..."
-                                            required
-                                        />
-                                    </div>
-
+                                    {/* Environment Variables */}
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <Label>Environment Variables</Label>
+                                            <div>
+                                                <Label className="text-sm font-medium">Environment Variables</Label>
+                                                <p className="text-xs text-muted-foreground">Add environment variables for your tool</p>
+                                            </div>
                                             <Button
                                                 type="button"
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={handleAddEnv}
-                                                className="h-8 gap-1"
+                                                className="h-8 gap-1.5"
                                             >
                                                 <PlusIcon className="h-4 w-4" />
                                                 Add Variable
                                             </Button>
                                         </div>
                                         
-                                        <div className="space-y-3">
+                                        <div className="space-y-2">
                                             {newToolEnvs.map((env, index) => (
-                                                <div key={index} className="flex gap-2 items-start">
-                                                    <div className="flex-1 space-y-2">
-                                                        <Input
-                                                            placeholder="Key"
-                                                            value={env.key}
-                                                            onChange={(e) =>
-                                                                handleUpdateEnv(index, e.target.value, env.value)
-                                                            }
-                                                        />
-                                                        <Input
-                                                            placeholder="Value"
-                                                            value={env.value}
-                                                            onChange={(e) =>
-                                                                handleUpdateEnv(index, env.key, e.target.value)
-                                                            }
-                                                        />
-                                                    </div>
+                                                <div key={index} className="group flex gap-2 items-center">
+                                                    <Input
+                                                        placeholder="Variable name"
+                                                        value={env.key}
+                                                        onChange={(e) =>
+                                                            handleUpdateEnv(index, e.target.value, env.value)
+                                                        }
+                                                        className="font-mono text-sm"
+                                                    />
+                                                    <Input
+                                                        placeholder="Value"
+                                                        value={env.value}
+                                                        onChange={(e) =>
+                                                            handleUpdateEnv(index, env.key, e.target.value)
+                                                        }
+                                                        type="password"
+                                                        className="font-mono text-sm"
+                                                    />
                                                     <Button
                                                         type="button"
                                                         variant="ghost"
                                                         size="icon"
                                                         onClick={() => handleRemoveEnv(index)}
-                                                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                                        className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
                                                     >
                                                         <TrashIcon className="h-4 w-4" />
                                                     </Button>
@@ -358,12 +376,13 @@ export function ToolSettings({
                                     <DialogClose asChild>
                                         <Button type="button" variant="outline">Cancel</Button>
                                     </DialogClose>
-                                    <Button type="submit" disabled={isAddServerPending}>
+                                    <Button type="submit" disabled={isAddServerPending || !newToolName.trim() || !newToolCommand.trim()}>
                                         {isAddServerPending ? (
-                                            <Spinner className="h-4 w-4" />
+                                            <Spinner className="h-4 w-4 mr-2" />
                                         ) : (
-                                            'Add Tool'
+                                            <Terminal className="h-4 w-4 mr-2" />
                                         )}
+                                        Add Tool
                                     </Button>
                                 </DialogFooter>
                             </form>

@@ -87,8 +87,10 @@ export function Chat({
                             {message.content.map((content, id) => {
                                 if (content.type === 'text') {
                                     return (
-                                        <div key={id} className="prose dark:prose-invert max-w-none text-sm [&>p]:m-0 [&>ul]:my-2 [&>ol]:my-2">
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        <div key={id} className="prose dark:prose-invert max-w-none text-sm [&>p]:m-0 [&>ul]:my-2 [&>ol]:my-2 [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:whitespace-pre-wrap [&_code]:break-words">
+                                            <ReactMarkdown 
+                                                remarkPlugins={[remarkGfm]}
+                                            >
                                                 {content.text.trim()}
                                             </ReactMarkdown>
                                         </div>

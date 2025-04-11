@@ -1,5 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/Accordion.tsx'
-import { Link } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
+import { Settings2, HammerIcon, LoaderCircle } from 'lucide-react'
 
 export const TutorialCard = () => {
     return <div className="absolute top-0 left-0 h-full w-[320px] 2xl:w-[400px] invisible xl:visible flex flex-col p-4">
@@ -7,46 +8,42 @@ export const TutorialCard = () => {
             <Accordion type="single" collapsible defaultValue="item-1">
                 <AccordionItem value="item-1">
                     <AccordionTrigger>
-                        <h1 className="whitespace-pre text-xl font-bold">
-                            💡 Help
+                        <h1 className="whitespace-pre text-xl font-bold flex items-center gap-2">
+                            <span>💡</span> Getting Started
                         </h1>
                     </AccordionTrigger>
                     <AccordionContent>
-                        <div className="flex flex-col gap-4">
-                            <h1 className="whitespace-pre text-xl font-bold">
-                                Guide
-                            </h1>
-                            <ol className="list-inside list-decimal space-y-4">
-                                <li>Add you E2B API key and the API key for your selcted model in LLM Settings.</li>
-                                <li>Create an MCP server connection in the Tool Settings (you can add more any
-                                    time). Don't forget to set any necessary API keys.
-                                </li>
-                                <li>Wait for the MCP server to load.</li>
-                                <li>Chat away!</li>
+                        <div className="flex flex-col gap-6">
+                            {/* Setup Guide */}
+                            <ol className="list-decimal pl-5 space-y-4 pt-2">
+                                <li>Click the settings icon <Settings2 className="h-4 w-4 inline text-muted-foreground" /> to add your E2B API key and model API key</li>
+                                <li>Click the tools icon <HammerIcon className="h-4 w-4 inline text-muted-foreground" /> to create a new MCP server connection</li>
+                                <li>When you see <LoaderCircle className="h-4 w-4 inline text-muted-foreground animate-spin" />, wait for the server to load</li>
+                                <li>Start chatting in the message box below!</li>
                             </ol>
-                            <h1 className="whitespace-pre text-xl font-bold">
-                                Resources
-                            </h1>
-                            <div>
-                                <div>
+
+                            {/* Resources Section */}
+                            <div className="space-y-3">
+                                <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                                    Resources
+                                </h2>
+                                <div className="space-y-2">
                                     <a href="https://github.com/modelcontextprotocol/servers"
-                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"><Link
-                                        className="w-3 h-3 inline mr-1" />Blog
-                                        post
-                                        about MCP Chat</a>
-                                    <a href="https://github.com/modelcontextprotocol/servers"></a>
-                                </div>
-                                <div>
+                                       className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-500 hover:underline">
+                                        <ExternalLink className="h-3 w-3" />
+                                        Blog post about MCP Chat
+                                    </a>
                                     <a href="https://github.com/modelcontextprotocol/servers"
-                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"><Link
-                                        className="w-3 h-3 inline mr-1" />Discover MCP Servers on
-                                        GitHub</a>
+                                       className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-500 hover:underline">
+                                        <ExternalLink className="h-3 w-3" />
+                                        Discover MCP Servers on GitHub
+                                    </a>
                                 </div>
                             </div>
-                            <div className="text-muted-foreground italic">
-                                We do not store any of your data. Your API keys are sent directly from your browser to
-                                E2B
-                                servers.
+
+                            {/* Privacy Notice */}
+                            <div className="text-xs text-muted-foreground italic border-t pt-4">
+                                We do not store any of your data. Your API keys are sent directly from your browser to E2B servers.
                             </div>
                         </div>
                     </AccordionContent>

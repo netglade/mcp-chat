@@ -33,7 +33,6 @@ export function EmptyState({ onExampleClick }: { onExampleClick: (query: string)
     return (
         <div className="h-full flex flex-col items-center justify-center p-4">
             <div className="max-w-md mx-auto text-center mb-6">
-                <h2 className="text-xl font-medium mb-2">Start a conversation</h2>
                 <p className="text-sm text-muted-foreground">
                     Try one of these examples to see MCP tools in action
                 </p>

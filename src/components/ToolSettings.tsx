@@ -213,7 +213,7 @@ export function ToolSettings({
 
             {/* Tool Dialog */}
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="sm:max-w-[500px]">
+                <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-hidden flex flex-col">
                     {selectedTool ? (
                         // Edit/View Tool Dialog
                         <>
@@ -225,10 +225,10 @@ export function ToolSettings({
                                 <DialogDescription>View and manage MCP tool configuration</DialogDescription>
                             </DialogHeader>
 
-                            <div className="space-y-6 py-4">
+                            <div className="space-y-6 py-4 overflow-y-auto flex-1 pr-1">
                                 <div className="space-y-2">
                                     <Label>Command</Label>
-                                    <code className="block w-full rounded-lg bg-muted p-3 text-sm font-mono">
+                                    <code className="block w-full rounded-lg bg-muted p-3 text-sm font-mono overflow-auto whitespace-pre-wrap break-all max-h-[120px]">
                                         {selectedTool.configuration.command}
                                     </code>
                                 </div>
@@ -238,9 +238,11 @@ export function ToolSettings({
                                         <Label>Environment Variables</Label>
                                         <div className="rounded-lg border divide-y">
                                             {Object.entries(selectedTool.configuration.envs).map(([key, value]) => (
-                                                <div key={key} className="flex items-center p-2 text-sm">
-                                                    <span className="font-medium min-w-[120px]">{key}</span>
-                                                    <span className="text-muted-foreground truncate">{value}</span>
+                                                <div key={key} className="flex items-center p-2 text-sm overflow-hidden">
+                                                    <span className="font-medium min-w-[120px] flex-shrink-0">{key}</span>
+                                                    <span className="text-muted-foreground truncate overflow-hidden text-ellipsis flex-1" title={value}>
+                                                        {value}
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
@@ -280,8 +282,8 @@ export function ToolSettings({
                                 </DialogDescription>
                             </DialogHeader>
 
-                            <form onSubmit={handleAddTool} className="space-y-4">
-                                <div className="space-y-4 pb-4">
+                            <form onSubmit={handleAddTool} className="space-y-4 flex flex-col flex-1 overflow-hidden">
+                                <div className="space-y-4 pb-4 overflow-y-auto pr-1">
                                     {/* Quick Start Section */}
                                     <div className="flex items-center gap-3 text-sm">
                                         <span className="flex items-center gap-1.5 shrink-0">
@@ -359,7 +361,7 @@ export function ToolSettings({
                                                         onChange={(e) =>
                                                             handleUpdateEnv(index, e.target.value, env.value)
                                                         }
-                                                        className="font-mono text-sm"
+                                                        className="font-mono text-sm flex-shrink-0 min-w-[140px]"
                                                     />
                                                     <Input
                                                         placeholder="Value"
@@ -368,7 +370,7 @@ export function ToolSettings({
                                                             handleUpdateEnv(index, env.key, e.target.value)
                                                         }
                                                         type="password"
-                                                        className="font-mono text-sm"
+                                                        className="font-mono text-sm flex-1 overflow-hidden text-overflow-ellipsis"
                                                     />
                                                     <Button
                                                         type="button"

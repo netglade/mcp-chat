@@ -38,8 +38,15 @@ export function ChatInput({
         >
             <div className="relative">
                 <div className="shadow-md rounded-2xl relative z-10 bg-background border">
-                    <div className="flex items-center px-3 py-2 gap-1">{children}</div>
-                    <div className="relative px-3 py-2">
+                    <div className="flex items-center px-3 py-2 justify-between">
+                        <div className="flex items-center gap-1">
+                            {Array.isArray(children) ? children.slice(0, -1) : null}
+                        </div>
+                        <div>
+                            {Array.isArray(children) ? children.slice(-1) : children}
+                        </div>
+                    </div>
+                    <div className="relative px-4 py-2">
                         <TextareaAutosize
                             autoFocus={true}
                             minRows={1}

@@ -124,6 +124,7 @@ export default function App() {
                     <NavBar
                         onClear={handleClearChat}
                         canClear={messages.length > 0}
+                        serverClients={serverClients}
                     />
                     {error && (
                         <ErrorMessage
@@ -143,7 +144,6 @@ export default function App() {
                         input={chatInput}
                         handleInputChange={handleSaveInputChange}
                         handleSubmit={handleSubmit}
-                        serverClients={serverClients}
                     >
                         <ToolSettings
                             serverClients={serverClients}

@@ -2,6 +2,7 @@ import { Chat } from '@/components/Chat'
 import { ChatInput } from '@/components/ChatInput'
 import { ToolSettings } from '@/components/ToolSettings'
 import { NavBar } from '@/components/NavBar'
+import { Footer } from '@/components/Footer'
 import { useState } from 'react'
 import type { Message } from '@/types/message'
 import { useLocalStorage } from 'usehooks-ts'
@@ -124,7 +125,6 @@ export default function App() {
                     <NavBar
                         onClear={handleClearChat}
                         canClear={messages.length > 0}
-                        serverClients={serverClients}
                     />
                     {error && (
                         <ErrorMessage
@@ -164,6 +164,7 @@ export default function App() {
                             onLanguageModelChange={handleLanguageModelChange}
                         />
                     </ChatInput>
+                    <Footer serverClients={serverClients} />
                 </div>
             </div>
         </main>

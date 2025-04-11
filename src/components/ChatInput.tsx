@@ -81,9 +81,6 @@ export function ChatInput({
                     </div>
                 </div>
             </div>
-            <p className="text-xs text-muted-foreground mt-2 text-center">
-                Assistant uses MCP to connect to MCP tools
-            </p>
         </form>
     )
 }

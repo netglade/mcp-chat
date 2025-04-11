@@ -56,19 +56,19 @@ export function ChatInput({
             <div className="relative">
                 <div className="shadow-md rounded-2xl relative z-10 bg-background border">
                     <div className="flex items-center px-3 py-2 gap-1">{children}</div>
-                    <TextareaAutosize
-                        autoFocus={true}
-                        minRows={1}
-                        maxRows={5}
-                        className="text-normal px-3 resize-none ring-0 bg-inherit w-full m-0 outline-none"
-                        required={true}
-                        placeholder="Chat with your tools..."
-                        disabled={isErrored}
-                        value={input}
-                        onChange={handleInputChange}
-                    />
-                    <div className="flex p-3 gap-2 items-center">
-                        <div>
+                    <div className="relative px-4 pb-2">
+                        <TextareaAutosize
+                            autoFocus={true}
+                            minRows={1}
+                            maxRows={5}
+                            className="text-normal resize-none ring-0 bg-inherit w-full m-0 outline-none pr-12"
+                            required={true}
+                            placeholder="Chat with your tools..."
+                            disabled={isErrored}
+                            value={input}
+                            onChange={handleInputChange}
+                        />
+                        <div className="absolute right-3 bottom-3">
                             <TooltipProvider>
                                 <Tooltip delayDuration={0}>
                                     <TooltipTrigger asChild>
@@ -77,9 +77,12 @@ export function ChatInput({
                                             variant="default"
                                             size="icon"
                                             type="submit"
-                                            className="rounded-xl h-10 w-10"
+                                            className="rounded-xl h-8 w-8 bg-primary/90 hover:bg-primary transition-colors"
                                         >
-                                            {isLoading ? <Spinner className="h-7 w-7 text-primary-foreground" /> : <ArrowUp className="h-5 w-5" />}
+                                            {isLoading ? 
+                                                <Spinner className="h-4 w-4 text-primary-foreground" /> : 
+                                                <ArrowUp className="h-4 w-4" />
+                                            }
                                         </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>Send message</TooltipContent>

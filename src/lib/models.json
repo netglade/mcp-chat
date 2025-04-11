@@ -8,13 +8,6 @@
       "multiModal": true
     },
     {
-      "id": "o1-mini",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "name": "o1 mini",
-      "multiModal": false
-    },
-    {
       "id": "o3-mini",
       "provider": "OpenAI",
       "providerId": "openai",
@@ -40,13 +33,6 @@
       "provider": "OpenAI",
       "providerId": "openai",
       "name": "GPT-4o Mini",
-      "multiModal": true
-    },
-    {
-      "id": "gpt-4-turbo",
-      "provider": "OpenAI",
-      "providerId": "openai",
-      "name": "GPT-4 Turbo",
       "multiModal": true
     },
     {

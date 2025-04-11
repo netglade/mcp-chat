@@ -127,7 +127,7 @@ export function ToolSettings({
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="text-muted-foreground hover:text-foreground hover:bg-accent h-8 w-8 rounded-lg transition-colors"
+                                    className="text-muted-foreground hover:text-foreground hover:bg-accent h-6 w-6 rounded-sm transition-colors"
                                 >
                                     <HammerIcon className="h-4 w-4" />
                                 </Button>

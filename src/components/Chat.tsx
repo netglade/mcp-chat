@@ -1,6 +1,8 @@
 import { LoaderIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Message } from '@/types/message'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export function Chat({
     messages,
@@ -30,75 +32,91 @@ export function Chat({
     return (
         <div
             id="chat-container"
-            className="flex flex-col pb-12 gap-2 overflow-y-auto max-h-full"
+            className="flex flex-col overflow-y-auto max-h-full [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-200 dark:[&::-webkit-scrollbar-thumb]:bg-zinc-800 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-zinc-300 dark:hover:[&::-webkit-scrollbar-thumb]:bg-zinc-700"
         >
-            {messages.map((message: Message, index: number) => (
-                <div
-                    className={`flex flex-col px-4 shadow-sm whitespace-pre-wrap ${message.role !== 'user' ? 'bg-accent dark:bg-white/5 border text-accent-foreground dark:text-muted-foreground py-4 rounded-2xl gap-4 w-full' : 'bg-gradient-to-b from-black/5 to-black/10 dark:from-black/30 dark:to-black/50 py-2 rounded-xl gap-2 w-fit'} font-serif`}
-                    key={index}
-                >
-                    {message.toolCalls && message.toolCalls.length > 0 && (
-                        <div className="flex flex-row">
-                            <div className="text-gray-400 mr-2 mt-1">Tool use:</div>
+            <div className="flex-1 flex flex-col gap-4 pt-4 pb-12">
+                {messages.map((message: Message, index: number) => (
+                    <div
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        key={index}
+                    >
+                        <div
+                            className={`flex flex-col max-w-[85%] md:max-w-[75%] shadow-sm
+                            ${message.role !== 'user' 
+                                ? 'bg-white dark:bg-zinc-800/90 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 py-4 px-5 rounded-2xl gap-4' 
+                                : 'bg-primary text-primary-foreground py-3 px-4 rounded-2xl gap-3'
+                            }`}
+                        >
+                            {message.toolCalls && message.toolCalls.length > 0 && (
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-1.5">
+                                        {message.toolCalls.map((toolCall) => (
+                                            <div 
+                                                key={toolCall.id} 
+                                                className="border border-zinc-200/10 rounded-lg overflow-hidden"
+                                            >
+                                                <div
+                                                    className="flex items-center justify-between px-3 py-2 bg-zinc-700/50 cursor-pointer hover:bg-zinc-700/70 transition-colors"
+                                                    onClick={() => toggleExpand(toolCall.id)}
+                                                >
+                                                    <span className="text-sm font-medium">{toolCall.name}</span>
+                                                    <span className="text-xs text-zinc-400">
+                                                        {expandedCalls[toolCall.id] ? '▲' : '▼'}
+                                                    </span>
+                                                </div>
 
-                            <div>
-                                {message.toolCalls.map((toolCall) => (
-                                    <div key={toolCall.id} className="my-1">
-                                        <div
-                                            className="flex items-center cursor-pointer"
-                                            onClick={() => toggleExpand(toolCall.id)}
-                                        >
-                                            <span className="text-white mr-1">{toolCall.name}</span>
-                                            <span className="text-gray-400">
-                                                {expandedCalls[toolCall.id] ? '▲' : '▼'}
-                                            </span>
-                                        </div>
-
-
-                                        {expandedCalls[toolCall.id] && (
-                                            <div className="mt-1">
-                                                {toolCall.arguments.map((argument) => (
-                                                    <div key={argument.name} className="flex">
-                                                        <span className="text-gray-400 mr-1">
-                                                            {argument.name}:
-                                                        </span>
-
-
-                                                        <span className="text-gray-200">
-                                                            {argument.value}
-                                                        </span>
+                                                {expandedCalls[toolCall.id] && (
+                                                    <div className="px-3 py-2 text-sm bg-zinc-800/50">
+                                                        {toolCall.arguments.map((argument) => (
+                                                            <div key={argument.name} className="flex py-0.5">
+                                                                <span className="text-zinc-400 mr-2 font-mono text-xs">
+                                                                    {argument.name}:
+                                                                </span>
+                                                                <span className="text-zinc-300 font-mono text-xs">
+                                                                    {argument.value}
+                                                                </span>
+                                                            </div>
+                                                        ))}
                                                     </div>
-                                                ))}
+                                                )}
                                             </div>
-                                        )}
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                </div>
+                            )}
+                            {message.content.map((content, id) => {
+                                if (content.type === 'text') {
+                                    return (
+                                        <div key={id} className="prose dark:prose-invert max-w-none text-sm [&>p]:m-0 [&>ul]:my-2 [&>ol]:my-2">
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {content.text.trim()}
+                                            </ReactMarkdown>
+                                        </div>
+                                    )
+                                }
+                                if (content.type === 'image') {
+                                    return (
+                                        <img
+                                            key={id}
+                                            src={content.image}
+                                            alt="fragment"
+                                            className="rounded-lg bg-white max-w-full h-auto"
+                                        />
+                                    )
+                                }
+                            })}
                         </div>
-                    )}
-                    {message.content.map((content, id) => {
-                        if (content.type === 'text') {
-                            return content.text
-                        }
-                        if (content.type === 'image') {
-                            return (
-                                <img
-                                    key={id}
-                                    src={content.image}
-                                    alt="fragment"
-                                    className="mr-2 inline-block w-12 h-12 object-cover rounded-lg bg-white mb-2"
-                                />
-                            )
-                        }
-                    })}
-                </div>
-            ))}
-            {isLoading && (
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <LoaderIcon strokeWidth={2} className="animate-spin w-4 h-4" />
-                    <span>Generating...</span>
-                </div>
-            )}
+                    </div>
+                ))}
+                {isLoading && (
+                    <div className="flex justify-start">
+                        <div className="flex items-center gap-3 text-sm text-muted-foreground bg-white/50 dark:bg-zinc-800/50 py-2 px-4 rounded-2xl border border-zinc-200/10">
+                            <LoaderIcon strokeWidth={2} className="animate-spin w-4 h-4" />
+                            <span>Generating...</span>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }

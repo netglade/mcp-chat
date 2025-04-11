@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/Button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/Tooltip'
-import { Trash, MessageSquareCode, CircleDot } from 'lucide-react'
+import { MessageSquareCode, CircleDot, XCircle } from 'lucide-react'
 
 export function NavBar({
     onClear,
@@ -22,24 +22,25 @@ export function NavBar({
                         <span>Connected</span>
                     </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <TooltipProvider>
-                        <Tooltip delayDuration={0}>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={onClear}
-                                    disabled={!canClear}
-                                    className="hover:bg-destructive/10 hover:text-destructive"
-                                >
-                                    <Trash className="h-4 w-4 md:h-5 md:w-5" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Clear chat history</TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
+                {canClear && (
+                    <div className="flex items-center gap-2">
+                        <TooltipProvider>
+                            <Tooltip delayDuration={0}>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={onClear}
+                                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors"
+                                    >
+                                        <XCircle className="h-5 w-5" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Clear chat history</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </div>
+                )}
             </div>
         </nav>
     )

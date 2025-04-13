@@ -361,7 +361,7 @@ export function ToolSettings({
                                                         onChange={(e) =>
                                                             handleUpdateEnv(index, e.target.value, env.value)
                                                         }
-                                                        className="font-mono text-sm flex-shrink-0 min-w-[140px]"
+                                                        className="font-mono text-sm flex-1"
                                                     />
                                                     <Input
                                                         placeholder="Value"
@@ -370,7 +370,7 @@ export function ToolSettings({
                                                             handleUpdateEnv(index, env.key, e.target.value)
                                                         }
                                                         type="password"
-                                                        className="font-mono text-sm flex-1 overflow-hidden text-overflow-ellipsis"
+                                                        className="font-mono text-sm flex-1"
                                                     />
                                                     <Button
                                                         type="button"

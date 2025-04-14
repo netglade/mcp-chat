@@ -67,13 +67,13 @@ export function ApiKeySettings({
                                 <ShieldCheck className="h-4 w-4 text-primary" />
                                 <Label htmlFor="modelApiKey" className="text-sm font-medium">Model API Key</Label>
                             </div>
-                            <p className="text-xs text-muted-foreground mb-1">Required for LLM integration</p>
+                            <p className="text-xs text-muted-foreground mb-1">OpenAI or Anthropic API key</p>
                             <Input
                                 id="modelApiKey"
                                 name="modelApiKey"
                                 type="password"
                                 required={true}
-                                placeholder="Enter your model provider API key"
+                                placeholder="Enter your OpenAI orAnthropic API key"
                                 defaultValue={languageModel.apiKey}
                                 onChange={(e) =>
                                     onLanguageModelChange({

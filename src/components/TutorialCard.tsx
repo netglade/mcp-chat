@@ -30,13 +30,13 @@ export const TutorialCard = () => {
                                     Resources
                                 </h2>
                                 <div className="space-y-2">
-                                    <a href="https://github.com/modelcontextprotocol/servers"
+                                    <a href=" https://www.netglade.cz/en/blog/bringing-mcps-to-the-cloud-how-we-won-the-e2b-hackathon"
                                         target="_blank"
                                         className="flex items-center gap-2 text-sm text-blue-500 dark:text-blue-400 hover:underline">
                                         <ExternalLink className="h-3 w-3" />
                                         Blog post about MCP Chat
                                     </a>
-                                    <a href="https://github.com/topics/mcp-server"
+                                    <a href="https://github.com/modelcontextprotocol/servers"
                                         target="_blank"
                                         className="flex items-center gap-2 text-sm text-blue-500 dark:text-blue-400 hover:underline">
                                         <ExternalLink className="h-3 w-3" />

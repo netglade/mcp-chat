@@ -44,7 +44,7 @@ export const useMcpTools = ({
                 command: serverConfiguration.command,
                 apiKey: e2bApiKey,
                 envs: serverConfiguration.envs,
-                timeoutMs: 1000 * 60 * 10,
+                timeoutMs: 1000 * 60 * 5,
             })
             const url = sandbox.getUrl()
 

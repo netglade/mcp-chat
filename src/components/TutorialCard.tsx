@@ -7,8 +7,8 @@ export const TutorialCard = () => {
             <Accordion type="single" collapsible defaultValue="item-1">
                 <AccordionItem value="item-1">
                     <AccordionTrigger>
-                        <h1 className="whitespace-pre text-xl font-medium text-foreground/80 flex items-center gap-2">
-                            <InfoIcon className="h-5 w-5 text-primary/80" /> About MCP Chat
+                        <h1 className="whitespace-pre text-xl font-normal text-primary/90 flex items-center gap-2">
+                            <InfoIcon className="h-5 w-5 text-primary/90" /> About MCP Chat
                         </h1>
                     </AccordionTrigger>
                     <AccordionContent>

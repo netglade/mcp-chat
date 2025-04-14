@@ -16,7 +16,7 @@ export function NavBar({
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                         <MessageSquareCode className="h-6 w-6 text-primary" />
-                        <h1 className="text-2xl font-bold">Chat & MCPs</h1>
+                        <h1 className="text-2xl font-semibold text-primary">Chat & MCPs</h1>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">

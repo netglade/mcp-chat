@@ -1,4 +1,4 @@
-import { Database, Globe, Github, Calculator } from 'lucide-react'
+import { Database, Globe, Github, Calculator, PartyPopper } from 'lucide-react'
 
 type ExampleQuery = {
     icon: React.ReactNode
@@ -31,19 +31,24 @@ export function EmptyState({ onExampleClick }: { onExampleClick: (query: string)
     ]
 
     return (
-        <div className="h-full flex flex-col items-center justify-center p-4">
+      <div className="h-full flex flex-col items-center justify-center p-4 animate-in fade-in duration-500">
             <div className="max-w-md mx-auto text-center mb-6">
+                <div className="flex justify-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center animate-in zoom-in duration-300">
+                        <PartyPopper className="h-6 w-6 text-white" />
+                    </div>
+                </div>
+                <h2 className="text-xl font-medium mb-2">Setup Complete!</h2>
                 <p className="text-sm text-muted-foreground">
                     Try one of these examples to see MCP tools in action
                 </p>
             </div>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
                 {exampleQueries.map((example, index) => (
                     <button
                         key={index}
                         onClick={() => onExampleClick(example.query)}
-                        className="flex items-center gap-3 p-4 rounded-lg border border-border hover:bg-accent/10 transition-colors text-left"
+                        className="flex items-center gap-3 p-4 rounded-lg border border-border hover:bg-accent/10 text-left"
                     >
                         <div className="flex-shrink-0">
                             {example.icon}

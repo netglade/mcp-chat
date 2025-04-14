@@ -144,7 +144,7 @@ export default function App() {
                         isLoading={isGenerateResponsePending}
                         onExampleClick={handleExampleClick}
                         hasApiKey={e2bApiKey.length > 0 && (languageModelConfiguration.apiKey?.length ?? 0) > 0}
-                        hasServers={serverClients.some(client => client.state === 'running')}
+                        hasServers={serverClients.length > 0}
                     />
                     <ChatInput
                         isErrored={error !== undefined}

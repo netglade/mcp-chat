@@ -1,6 +1,6 @@
 import { McpServerClient } from '@/types/mcpServer.ts'
 import { useMutation } from '@tanstack/react-query'
-import { generateText } from 'ai'
+import { streamText } from 'ai'
 import { LLMModelConfig } from '@/types/llmModel.ts'
 import { getModelClient } from '@/lib/models.ts'
 import modelsList from '@/lib/models.json'
@@ -12,12 +12,14 @@ type UseChatArgs = {
     clients: McpServerClient[]
     languageModelConfig: LLMModelConfig
     extendOrRestartServer: (client: McpServerClient) => Promise<void>
+    onStreamUpdate?: (text: string) => void
 }
 
 export const useChat = ({
     clients,
     languageModelConfig,
     extendOrRestartServer,
+    onStreamUpdate,
 }: UseChatArgs) => {
     const generateResponseFn = async ({
         messages,
@@ -36,7 +38,8 @@ export const useChat = ({
         const languageModel = modelsList.models.find((x) => x.id === languageModelConfig.model)!
         const modelClient = getModelClient(languageModel, languageModelConfig)
 
-        const response = await generateText({
+        let accumulatedText = ''
+        const result = streamText({
             model: modelClient,
             tools,
             maxSteps: 20,
@@ -44,16 +47,31 @@ export const useChat = ({
             headers: {
                 'anthropic-dangerous-direct-browser-access': 'true',
             },
+            onChunk: ({ chunk }) => {
+                if (chunk.type === 'text-delta') {
+                    accumulatedText += chunk.textDelta
+                    onStreamUpdate?.(accumulatedText)
+                }
+            },
         })
 
-        console.log(JSON.stringify(response.response.messages))
-        console.log(response.text)
+        // Wait for the stream to finish and get the final result
+        for await (const part of result.fullStream) {
+            if (part.type === 'finish') {
+                console.log('Stream finished:', part)
+                break
+            }
+        }
 
-        const toolCalls = extractToolCalls(response.response.messages)
-        console.log(JSON.stringify(toolCalls))
+        const finalText = await result.text
+        console.log('Final text:', finalText)
+
+        const responseMetadata = await result.response
+        const toolCalls = extractToolCalls(responseMetadata.messages || [])
+        console.log('Tool calls:', JSON.stringify(toolCalls))
 
         return {
-            text: response.text,
+            text: finalText,
             toolCalls,
         }
     }

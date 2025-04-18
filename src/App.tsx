@@ -19,6 +19,7 @@ export default function App() {
     const [messages, setMessages] = useState<Message[]>([])
     const [chatInput, setChatInput] = useLocalStorage('chat', '')
     const [error, setError] = useState<string | undefined>(undefined)
+    const [streamingContent, setStreamingContent] = useState<string>('')
 
     const [languageModelConfiguration, setLanguageModelConfiguration] = useLocalStorage<LLMModelConfig>(
         'languageModel',
@@ -42,12 +43,15 @@ export default function App() {
         clients: serverClients,
         languageModelConfig: languageModelConfiguration,
         extendOrRestartServer,
+        onStreamUpdate: (text) => {
+            setStreamingContent(text)
+        },
     })
-
 
     const submit = async ({ messages }: { messages: Message[] }) => {
         console.log(messages)
         setError(undefined)
+        setStreamingContent('')
 
         try {
             const response = await generateResponseAsync({ messages })
@@ -56,9 +60,11 @@ export default function App() {
                 toolCalls: response.toolCalls,
                 content: [{ type: 'text', text: response.text ?? '' }],
             })
+            setStreamingContent('')
         } catch (err: unknown) {
             console.error(`Error generating response:`, err)
             setError(err instanceof Error ? err.message : 'An error occurred while generating response')
+            setStreamingContent('')
             addMessage({
                 role: 'assistant',
                 content: [{ type: 'text', text: 'Ups, something went wrong...' }],
@@ -114,6 +120,7 @@ export default function App() {
         setChatInput('')
         setMessages([])
         setError(undefined)
+        setStreamingContent('')
     }
 
     function handleExampleClick(query: string) {
@@ -145,6 +152,7 @@ export default function App() {
                         onExampleClick={handleExampleClick}
                         hasApiKey={e2bApiKey.length > 0 && (languageModelConfiguration.apiKey?.length ?? 0) > 0}
                         hasServers={serverClients.length > 0}
+                        streamingContent={streamingContent}
                     />
                     <ChatInput
                         isErrored={error !== undefined}

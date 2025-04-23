@@ -1,4 +1,4 @@
-import { LoaderIcon, HammerIcon, Settings2, CheckIcon } from 'lucide-react'
+import { LoaderIcon, HammerIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Message } from '@/types/message'
 import ReactMarkdown from 'react-markdown'
@@ -12,12 +12,14 @@ export function Chat({
     onExampleClick,
     hasApiKey = false,
     hasServers = false,
+    streamingContent,
 }: {
     messages: Message[]
     isLoading: boolean
     onExampleClick?: (query: string) => void
     hasApiKey?: boolean
     hasServers?: boolean
+    streamingContent?: string
 }) {
     const [expandedCalls, setExpandedCalls] = useState(
         {} as Record<string, boolean>,
@@ -35,7 +37,7 @@ export function Chat({
         if (chatContainer) {
             chatContainer.scrollTop = chatContainer.scrollHeight
         }
-    }, [JSON.stringify(messages)])
+    }, [JSON.stringify(messages), streamingContent])
 
     // Show setup guide if API keys or servers are not set up
     if (messages.length === 0 && !isLoading && (!hasApiKey || !hasServers)) {
@@ -131,9 +133,21 @@ export function Chat({
                         </div>
                     </div>
                 ))}
-                {isLoading && (
+                {streamingContent && (
+                    <div className="flex justify-start">
+                        <div className="flex flex-col max-w-[85%] md:max-w-[75%] shadow-sm bg-white dark:bg-zinc-800/90 border border-zinc-200 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200 py-4 px-5 rounded-2xl gap-4">
+                            <div className="prose dark:prose-invert max-w-none text-sm [&>p]:m-0 [&>ul]:my-2 [&>ol]:my-2 [&_pre]:whitespace-pre-wrap [&_pre]:break-words [&_code]:whitespace-pre-wrap [&_code]:break-words">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                    {streamingContent.trim()}
+                                </ReactMarkdown>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {isLoading && !streamingContent && (
                     <div className="flex justify-start pt-2">
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <LoaderIcon className="h-4 w-4 animate-spin" />
                             <span>AI is thinking...</span>
                         </div>
                     </div>

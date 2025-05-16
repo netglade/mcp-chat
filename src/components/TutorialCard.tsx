@@ -1,5 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/Accordion.tsx'
-import { ExternalLink, ShieldCheck, InfoIcon, Lightbulb } from 'lucide-react'
+import { ExternalLink, ShieldCheck, InfoIcon, Lightbulb, Mail } from 'lucide-react'
 
 export const TutorialCard = () => {
     return <div className="absolute top-0 right-0 h-full w-[320px] 2xl:w-[400px] invisible xl:visible flex flex-col p-4">
@@ -65,6 +65,29 @@ export const TutorialCard = () => {
                                             You can verify this yourself using browser Developer Tools (Network tab).
                                         </p>
                                     </div>
+                                </div>
+                            </div>
+
+                            {/* Contact Us Section */}
+                            <div className="space-y-3">
+                                <h2 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
+                                    <Mail className="h-4 w-4 text-blue-500 dark:text-blue-400" />
+                                    Contact us
+                                </h2>
+                                <div className="space-y-2 text-xs text-foreground/70">
+                                    <p>
+                                        Want to integrate MCPs into your product, talk more about AI agents, or just have a chat with us?
+                                    </p>
+                                </div>
+                                <div className="space-y-2">
+                                    <a href="https://www.netglade.cz" target="_blank" rel="noopener" className="flex items-center gap-2 text-sm text-blue-500 dark:text-blue-400 hover:underline">
+                                        <ExternalLink className="h-3 w-3" />
+                                        Visit our website
+                                    </a>
+                                    <a href="mailto:vacha@netglade.cz" className="flex items-center gap-2 text-sm text-blue-500 dark:text-blue-400 hover:underline">
+                                        <Mail className="h-3 w-3" />
+                                        vacha@netglade.cz
+                                    </a>
                                 </div>
                             </div>
                         </div>
